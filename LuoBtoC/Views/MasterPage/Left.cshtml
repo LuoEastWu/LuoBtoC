@@ -1,0 +1,48 @@
+﻿@model SqlModel.MasterPage.LeftModels
+<div id="sidebar" class="float_l">
+    <div class="sidebar_box">
+        <span class="bottom"></span>
+        <h3>产品分类</h3>
+        <div class="content">
+            <ul class="sidebar_list">
+                @foreach (SqlModel.ProductType pro in Model.ProList)
+                {
+                    <h6 class="first">
+                        @Html.ActionLink(pro.TypeName, "Products", "Home", new { ProductTypeId = pro.ID }, "")
+                    </h6>
+                    foreach (SqlModel.ProductType subPro in new BLL.Bll_ProductType().GetListByPage(" IsDelete=0 and fid=" + pro.ID, " sort ", 0, 15))
+                    {
+                        <li style=" text-align:left; margin-left:20px">
+                            @Html.ActionLink(Collections.publicHandle.GetSubstring(subPro.TypeName, 10, "..."), "Products", "Home", new { ProductTypeId = subPro.ID }, "")
+                        </li>
+                    }
+
+
+                    <li class="last"><a href="#"></a></li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="sidebar_box">
+        <span class="bottom"></span>
+        <h3>热销产品 </h3>
+        <div class="content">
+            @foreach (SqlModel.Product pro in Model.ProductList)
+            {
+                <div class="bs_box">
+                    <a href='/Home/Productdetail?id=@pro.ID'>
+                        <img src="Admin/Upfile/@pro.ProductPic" alt="Shoes 1" style="width:57px; height:59px;" />
+                    </a>
+                    <h4>
+                        <a href='/Home/Productdetail?id=@pro.ID'>
+                            @Collections.publicHandle.GetSubstring(@pro.ProductName, 10, "...")
+                        </a>
+                    </h4>
+                    <p class="price">本网站价：￥ @pro.WebsitePrice</p>
+                    <div class="cleaner"></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

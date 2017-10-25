@@ -1,0 +1,25 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="../js/jquery.js" type="text/javascript"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>金燕3.0formsok</title>
+</head>
+<frameset rows="105px,*,23px" frameborder="no" border="0" framespacing="0">
+    <frame src="@Url.Action("Top")" scrolling="No" frameborder="0" marginheight="0" marginwidth="0">
+        <frameset cols="209px,*" border="0">
+            <frame src="@Url.Action("Left")" noresize="noresize" frameborder="0" marginheight="0" marginwidth="0">
+            <frame name="MainFrame" src="@Url.Action("Product_Manage", "Product_Manage")" noresize="noresize" frameborder="0" marginheight="0" marginwidth="0">
+</frameset>
+    <frame src="@Url.Action("Down")" scrolling="No" frameborder="0" marginheight="0" marginwidth="0">
+    <frame src="UntitledFrame-1">
+</frameset>
+<body>
+
+</body>
+</html>

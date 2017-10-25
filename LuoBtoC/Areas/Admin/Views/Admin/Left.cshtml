@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Left";
+}
+@model LuoBtoC.Areas.Admin.Models.MenuInfoModel
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>金燕3.0left</title>
+</head>
+<link rel="stylesheet" type="text/css" href="css/left.css" />
+<body topmargin="0px" bottommargin="0px" leftmargin="0px" rightmargin="0px">
+    <div class="left1">
+        @{
+            if (Model != null)
+            {
+                foreach (var m in Model.listMenu.Where(a => a.Fid == 0))
+                {
+                    
+                        <div class="left2">
+                            <img src="images/other/sanjiao1.jpg" />&ensp;
+                            <a href="#" style=" font-weight:bold">@m.menuName</a>
+                            <a href="#" style="float:right; line-height:32px; margin-right:10px"></a>
+                        </div>
+                        foreach (var Fm in Model.listMenu.Where(a => a.Fid == m.id))
+                        {
+                            <div class="left4">
+                               
+                                <a href="Product_Manage/Product_Manage" target="MainFrame">@Fm.menuName</a>
+                            </div>
+                        }
+                  
+
+                   
+                }
+            }
+        }
+     
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<frameset rows="105px,*,23px" frameborder="no" border="0" framespacing="0">
+    <frame src="@Url.Action("Top", "admin", new { })" scrolling="No" frameborder="0" marginheight="0" marginwidth="0">
+        <frameset cols="209px,*" border="0">
+            <frame src="@Url.Action("Left", "admin", new { })" noresize="noresize" frameborder="0" marginheight="0" marginwidth="0">
+            </frame>
+            <frame name="MainFrame" src="@Url.Action("Product_Manage", "Product_Manage", new { })" noresize="noresize" frameborder="0" marginheight="0" marginwidth="0">
+            </frame>
+        </frameset>
+    </frame>
+    <frame src="@Url.Action("Down", "admin", new { })" scrolling="No" frameborder="0" marginheight="0" marginwidth="0">
+    </frame>
+    <frame src="UntitledFrame-1">
+    </frame>
+</frameset>
+
+<body>
+   @RenderBody()
+</body>
+</html>

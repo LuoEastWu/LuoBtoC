@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Collection";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model SqlModel.MemberModel.CollectionModel
+
+<div id="content" class="float_r">
+    <h5 style="text-align:left">会员中心 -》我的收藏</h5>
+    <table width="680px" cellspacing="0" cellpadding="5">
+
+        <tr bgcolor="#ddd">
+            <th width="90" align="left" nowrap="nowrap" style="border-right:1px #ccc solid;">商品编码 </th>
+            <th width="85" align="center" nowrap="nowrap" style="border-right:1px #ccc solid;">商品图片 </th>
+            <th align="left" nowrap="nowrap" style="border-right:1px #ccc solid;">商品名称 </th>
+            <th width="120" align="left" nowrap="nowrap" style="border-right:1px #ccc solid;">收藏时间 </th>
+            <th width="50" align="left" nowrap="nowrap">操作</th>
+
+        </tr>
+        @{
+            BLL.bll_Product pro = new BLL.bll_Product();
+            
+            };
+        @foreach (var mode in Model.CollectionList)
+        {
+           
+            SqlModel.Product proMode = pro.GetModel(Convert.ToInt64(mode.ProductId));
+                             
+            <tr>
+                <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;">
+                    <a href='../Productdetail.aspx?id=@mode.ProductId'>
+                       @proMode.ID
+                    </a>
+                </td>
+                <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;">
+                    <a href='../Productdetail.aspx?id=@mode.ProductId'>
+                        <img src="../Admin/Upfile/ @proMode.ID" alt="@mode.ProductName" title="@mode.ProductName" style="width:80px;" />
+                    </a>
+                </td>
+                <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;">
+                    <a href='../Productdetail.aspx?id=@mode.ProductId'>
+                        @mode.ProductName
+                    </a>
+                </td>
+                <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;">
+                    @DateTime.Parse(@mode.CollectionDate.ToString()).ToString("yyyy-MM-dd hh:mm:ss")
+                </td>
+                <td align="left" style="border-bottom:1px #ccc solid;">
+                    @Html.ActionLink("删除", "CollectionDelete", "Member", new { collectionID = mode.ID }, new { onclick = "return confirm('确认删除？')" })
+                </td>
+            </tr>
+        }
+
+
+      @Html.Partial("~/Views/Shared/BasePage.cshtml", ViewData["pagemodel"])
+    </table>
+
+</div>

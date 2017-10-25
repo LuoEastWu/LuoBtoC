@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "Shoppingcart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model SqlModel.MemberModel.ShoppingcartModel
+
+<link href="css/templatemo_style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
+<script type="text/javascript">
+    //我要购买
+    function select_adress() {
+        var b = window.confirm("您没登录，请先登录？");
+        if (b) {
+            opendiv('m', 400, 200);
+        }
+
+    }
+</script>
+
+
+
+<div id="content" class="float_r">
+    <h3>购物车</h3>
+    <table width="680px" cellspacing="0" cellpadding="5">
+        <tr bgcolor="#ddd">
+            <th width="120" align="left" nowrap="nowrap" style="border-right:1px #ccc solid;">商品图片 </th>
+            <th width="180" align="left" nowrap="nowrap" style="border-right:1px #ccc solid;">商品名称 </th>
+            <th width="130" align="left" nowrap="nowrap" style="border-right:1px #ccc solid;">商品编码 </th>
+            <th width="100" align="left" nowrap="nowrap" style="border-right:1px #ccc solid;">数量 </th>
+            <th width="60" align="left" nowrap="nowrap" style="border-right:1px #ccc solid;">单价 </th>
+            <th width="60" align="left" nowrap="nowrap" style="border-right:1px #ccc solid;">总金额 </th>
+            <th width="90" align="left" nowrap="nowrap" style="border-right:1px #ccc solid;"> 操作</th>
+
+        </tr>
+        @if (Model.proModel != null)
+        {
+            foreach (var m in Model.proModel)
+            {
+                <tr>
+                    <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;">
+                        <a href='Productdetail.aspx?id=@m.ID'>
+                            <img src='Admin/Upfile/@m.ProductPic' alt="Shoes 1" style="width:100px;" />
+                        </a>
+                    </td>
+                    <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;">
+                        @m.ProductName
+                    </td>
+                    <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;">
+                        @m.ProductNo
+                    </td>
+                    <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;" nowrap="nowrap">
+                        <input id="txtProductNum" style="width:20px;text-align:right" title="@Model.proModel.Count" value="@Model.proModel.Count">
+                        <input id="LinkButton1" value="修改" style="cursor: hand; padding-top:5px" type="submit">
+                    </td>
+                    <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;">
+                        @Convert.ToDecimal(m.WebsitePrice)
+                    </td>
+                    <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;">
+                        @Convert.ToDecimal(m.ProductTotal)
+                    </td>
+                    <td align="left" style="border-bottom:1px #ccc solid; border-right:1px #ccc solid;">
+                        @Html.ActionLink("删除", "linkbtnDelete", "Member", new { style = "cursor:hand", collectionID = @Model.proModel.Count }, new { onclick = "return confirm('确认删除？')" })
+                    </td>
+                </tr>
+            }
+        }
+
+
+       <tr>
+
+            <td align="left" style="background:#ddd; font-weight:bold" colspan="3">
+                商品总金额：@ViewBag.litSunMoney
+            </td>
+
+            <td align="right" style="background:#ddd; font-weight:bold" colspan="4">
+                <a href="Shoppingcart.aspx?flag=Clear">清空购物车</a>
+                &nbsp;
+                <a href="Index.aspx">接着去购物</a>
+                &nbsp;
+                <a href="javascript:history.back()">返回</a>
+                &nbsp;
+                <input name="btnBuy" value="现在结账" id="btnBuy" style="cursor:hand;" type="submit">
+            </td>
+        </tr>
+    </table>
+
+</div>

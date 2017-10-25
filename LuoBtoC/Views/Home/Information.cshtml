@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Information";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model SqlModel.Home.InformationModel
+<link href="css/templatemo_style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
+
+
+<div id="sidebar" class="float_l">
+    <div class="sidebar_box" style="width:717px; height:1068px;">
+        <span class="bottom"></span>
+        <h3>@ViewBag.strTypeName</h3></br >
+        <div class="content">
+            <ul class="sidebar_list">
+                <li class="first"><a href="#"></a></li>
+                @foreach (var m in Model.infList)
+                {
+                    <li>
+                        [@LuoBtoC.Controllers.HomeController.getInformationTypeName(Convert.ToInt64(m.InformationTypeId))]
+                        <a href='Informationdetail.aspx?id=<%#  Eval("Id") %>'>
+                            @Collections.publicHandle.GetSubstring(m.InformationName, 100, "...");
+                        </a>
+                        <span class="span_right">
+                             @DateTime.Parse(m.CreateDate.ToString()).ToString("yyyy-MM-dd")
+                        </span>
+                    </li>
+                }
+
+
+                <li class="last"><a href="#"></a></li>
+            </ul>
+        </div>
+
+        <div id="trRecord" style="float:left; margin-left:80px; margin-top:10px">
+            <nobr>
+               @Html.Partial("~/Views/Shared/BasePage.cshtml", ViewData["pagemodel"])
+            </nobr>
+        </div>
+    </div>
+</div> 

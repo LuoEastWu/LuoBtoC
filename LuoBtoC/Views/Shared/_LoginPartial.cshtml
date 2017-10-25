@@ -1,0 +1,49 @@
+﻿@if (Request.IsAuthenticated) {
+    <text>
+        你好，@Html.ActionLink(User.Identity.Name, "Manage", "Account", routeValues: null, htmlAttributes: new { @class = "username", title = "管理" })!
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" })) {
+            @Html.AntiForgeryToken()
+            <a href="javascript:document.getElementById('logoutForm').submit()">注销</a>
+        }
+    </text>
+} else {
+    <ul>
+        <li>@Html.ActionLink("注册", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("登录", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
+
+
+@if (Session["MemberID"] != null)
+{
+    <div id="pnlOutLogin">
+        @Html.ActionLink("我的账户","MemberInfo", "Member")
+        |
+     
+        @Html.ActionLink("我的收藏", "Collection", "Member")
+        |
+       @Html.ActionLink("我的购物车", "Shoppingcart", "Member") 
+        |
+        @Html.ActionLink("我的评论", "Review", "Member")
+        | 
+        您好：@Session["MemberName"]
+        @Html.ActionLink("安全退出", "lbnTuo", "Member")
+    </div>
+}
+else
+{
+    <div id="pnlLogin">
+        @Html.ActionLink("我的账户", "MemberInfo", "Member")
+        |
+        @Html.ActionLink("我的收藏", "Collection", "Member")
+        |
+       @Html.ActionLink("我的购物车", "Shoppingcart", "Member") 
+        |
+        @Html.ActionLink("我的评论", "Review", "Member")
+        |
+        @Html.ActionLink("登录", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+        |
+        @Html.ActionLink("注册", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
+    </div>
+    
+}

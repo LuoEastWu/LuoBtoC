@@ -1,0 +1,91 @@
+﻿@model SqlModel.Account.RegisterModel
+@{
+    ViewBag.Title = "注册";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>新建帐户。</h2>
+</hgroup>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    @*<fieldset>
+        <legend>注册表单</legend>
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.ConfirmPassword)
+                @Html.PasswordFor(m => m.ConfirmPassword)
+            </li>
+        </ol>
+        <input type="submit" value="注册" />
+    </fieldset>*@
+
+
+
+
+    <div id="content" class="float_r">
+        <h2 style="text-align:left">注册</h2>
+        @*@Html.EditorForModel()*@
+        <div class="content_half float_l checkout">
+            @Html.LabelFor(m => m.UserName)
+            @Html.TextBoxFor(m => m.UserName, new { syle = "width:300px;" })
+            <font color="red">@Html.ValidationMessageFor(m => m.UserName)</font>
+            
+            <br />
+            <br />
+            @Html.LabelFor(m => m.Password)
+            @Html.PasswordFor(m => m.Password, new { syle = "width:300px;" })
+            @Html.ValidationMessageFor(m => m.Password)
+            <br />
+            <br />
+            @Html.LabelFor(m => m.ConfirmPassword)
+            @Html.PasswordFor(m => m.ConfirmPassword, new { style = "width:300px;" })
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+            <br />
+            <br />
+            @Html.LabelFor(m => m.Email)
+            @Html.TextBoxFor(m => m.Email, new { style = "width:300px;" })
+            @Html.ValidationMessageFor(m => m.Email)
+            <br />
+            <br />
+            @Html.LabelFor(m => m.Phone)
+            @Html.TextBoxFor(m => m.Phone, new { style = "width:300px" })
+            @Html.ValidationMessageFor(m => m.Phone)
+            <br />
+            <br />
+            @Html.LabelFor(m => m.QQ)
+            @Html.TextBoxFor(m => m.QQ, new { style = "width:300px" })
+            @Html.ValidationMessageFor(m => m.QQ)
+            <br />
+            <br />
+            @Html.LabelFor(m => m.Address)
+            @Html.TextBoxFor(m => m.Address, new { style = "width:300px" })
+            @Html.ValidationMessageFor(m => m.Address)
+            <br />
+            <br />
+            <input id="btnRegistration" src="images/btn_Registration.jpg" style="height: 25px; width: 75px; vertical-align: middle" type="image" />
+
+            <a href="javascript:location.href='Login.aspx'">
+                <img src="images/btn_Cancel.jpg" style="height: 25px; width: 75px; vertical-align: middle; " alt="" />
+            </a>
+        </div>
+
+    </div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,94 @@
+﻿@{
+    Layout = null;
+}
+@model SqlModel.MasterPage.TopModels
+
+<link href="css/templatemo_style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/nivo-slider.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/ddsmoothmenu.js">
+
+</script>
+
+<script type="text/javascript">
+
+    ddsmoothmenu.init({
+        mainmenuid: "top_nav", //menu DIV id
+        orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
+        classname: 'ddsmoothmenu', //class added to menu's outer DIV
+        //customtheme: ["#1c5a80", "#18374a"],
+        contentsource: "markup" //"markup" or ["container_id", "path_to_menu_file"]
+    })
+
+</script>
+
+
+<div id="templatemo_header">
+    <div id="site_title"><h1><a href="Index.aspx"><!--网上购物 --></a></h1></div>
+    <div id="header_right">
+        <p>
+            @Html.Partial("_LoginPartial")
+        </p>
+    </div>
+    <div class="cleaner"></div>
+</div> <!-- END of templatemo_header -->
+
+<div id="templatemo_menubar">
+
+    <div id="top_nav" class="ddsmoothmenu">
+        <ul>
+            <li><a href="Index.aspx" class="selected">主页</a></li>
+            @foreach (SqlModel.ProductType pro in Model.ProList)
+            {
+                <li>
+
+                    @Html.ActionLink(pro.TypeName, "Products", "Home", new { ProductTypeId = pro.ID }, "")
+
+
+
+                    <ul>
+                        @foreach (SqlModel.ProductType proSub in new BLL.Bll_ProductType().GetListByPage(" IsDelete=0 and fid=" + pro.ID, " sort ", 0, 15))
+                        {
+                            <li>
+                                @Html.ActionLink(proSub.TypeName, "Products", "Home", new { ProductTypeId = proSub.ID }, "")
+
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+
+
+
+            @foreach (SqlModel.InformationType information in Model.informationList)
+            {
+                <li>
+                    @Html.ActionLink(information.TypeName, "Information", "Home", new { InformationTypeId = information.ID }, "")
+
+                    <ul>
+                        @foreach (SqlModel.InformationType SubInformation in new BLL.bll_InformationType().GetListByPage(" IsDelete=0 and fid=" + information.ID, " sort ", 0, 15))
+                        {
+                            <li>
+                                @Html.ActionLink(SubInformation.TypeName, "Information", "Home", new { InformationTypeId = SubInformation.ID }, "")
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+
+
+        </ul>
+        <br style="clear: left" />
+    </div> <!-- end of ddsmoothmenu -->
+
+    <div id="templatemo_search">
+
+        <!--  <input type="text" value=" " name="keyword" id="keyword" title="keyword" onfocus="clearText(this)" onblur="clearText(this)" class="txt_field" />-->
+        <asp:TextBox runat="server" ID="txtKeyword" CssClass="txt_field"></asp:TextBox>
+        <asp:Button ID="btnSearch" runat="server" Text="" CssClass="sub_btn" OnClick="btnSearch_OnClick" />
+        <!-- <input type="submit" name="Search" value=" " alt="Search" id="searchbutton" title="Search" class="sub_btn"  />-->
+
+    </div>
+</div> <!-- END of templatemo_menubar -->
