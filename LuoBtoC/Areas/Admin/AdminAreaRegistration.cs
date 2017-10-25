@@ -19,7 +19,6 @@ namespace LuoBtoC.Areas.Admin
                 "{controller}/{action}/{id}",
                 new { action = "Login", id = UrlParameter.Optional }
             );
-           
         }
     }
 }
