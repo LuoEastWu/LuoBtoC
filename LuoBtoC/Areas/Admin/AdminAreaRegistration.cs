@@ -6,8 +6,7 @@ namespace LuoBtoC.Areas.Admin
     {
         public override string AreaName
         {
-            get { return "Admin";
-            }
+            get { return "Admin";}
         }
 
         public override void RegisterArea(AreaRegistrationContext context)
