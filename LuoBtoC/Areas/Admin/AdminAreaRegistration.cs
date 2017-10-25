@@ -12,8 +12,6 @@ namespace LuoBtoC.Areas.Admin
             }
         }
 
-
-
         public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapRoute(
