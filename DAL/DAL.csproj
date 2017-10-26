@@ -42,6 +42,7 @@
     <Compile Include="dal_Advert.cs" />
     <Compile Include="dal_Brand.cs" />
     <Compile Include="Dal_Collection.cs" />
+    <Compile Include="dal_ComDataList.cs" />
     <Compile Include="dal_Information.cs" />
     <Compile Include="dal_InformationType.cs" />
     <Compile Include="dal_Member.cs" />

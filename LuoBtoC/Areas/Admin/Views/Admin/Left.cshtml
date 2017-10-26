@@ -25,8 +25,8 @@
                         foreach (var Fm in Model.listMenu.Where(a => a.Fid == m.id))
                         {
                             <div class="left4">
-                               
-                                <a href="Product_Manage/Product_Manage" target="MainFrame">@Fm.menuName</a>
+                               @Html.ActionLink(Fm.menuName, Fm.MenuAction, Fm.MenuControl, null, new { target = "MainFrame" });
+                              
                             </div>
                         }
                   

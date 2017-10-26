@@ -37,5 +37,12 @@ namespace BLL
         {
             return dal.GetList(p1, p2, p3);
         }
+        /// <summary>
+		/// 删除一条数据
+		/// </summary>
+        public bool Delete(long iD)
+        {
+            return dal.Delete(iD);
+        }
     }
 }

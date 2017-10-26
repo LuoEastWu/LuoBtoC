@@ -128,6 +128,29 @@ namespace DAL
             }
         }
 
+        public bool Delete(long iD)
+        {
+            int rowsAffected = 0;
+           
+
+            SqlSugar.StartSqlSugar.GetInstance((db)=> 
+            {
+                rowsAffected = db.Ado.UseStoredProcedure<int>(() =>
+                {
+                    return db.Ado.GetInt("Product_Delete", new { ID = iD });
+                });
+            });
+            
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public List<SqlModel.Product> GetPage(string whereStr, string strOrderBy)
         {
             List<SqlModel.Product> proList = new List<SqlModel.Product>();

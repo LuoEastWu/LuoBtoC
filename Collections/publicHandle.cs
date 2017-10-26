@@ -149,7 +149,54 @@ namespace Collections
         }
         #endregion
 
+        /// <summary>
+        /// 截取数组字符串
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string GetSubStr(string[] str, string s)
+        {
+            foreach (string substr in str)
+            {
+                if (s.IndexOf(substr) > -1)
+                {
+                    s = s.Substring(0, s.IndexOf(substr));
+                }
+            }
+            if (s.LastIndexOf('?') + 1 == s.Length)
+            {
+                s = s.Replace("?", "");
+            }
+            if (s.LastIndexOf('&') + 1 == s.Length)
+            {
+                s = s.Replace("&", "");
+            }
+            return s;
+        }
 
-     
+
+        /// <summary>
+        /// 弹出提示信息
+        /// </summary>    
+        /// <param name="page">this.Page</param>
+        /// <param name="message">提示信息</param>
+        /// <param name="url">url</param>
+        public static string ShowMessage( string message, string url)
+        {
+            return "<script language=\"javascript\" >alert('" + message + "');javascript:location='" + url + "';</script>";
+
+        }
+        /// <summary>
+        /// 弹出提示信息
+        /// </summary>
+        /// <param name="page">this.Page</param>
+        /// <param name="message">提示信息</param>
+        public static string ShowMessage( string message)
+        {
+
+           return "<script language=\"javascript\" >alert('" + message + "');</script>";
+
+
+        }
     }
 }

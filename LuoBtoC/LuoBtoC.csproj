@@ -277,6 +277,10 @@
     <Content Include="Areas\Admin\Views\Admin\Login.cshtml" />
     <Content Include="Areas\Admin\Views\Admin\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Admin\Exit.cshtml" />
+    <Content Include="Areas\Admin\Views\Product_Manage\ProductType_Manage.cshtml" />
+    <Content Include="Areas\Admin\Views\Product_Manage\Product_Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Product_Manage\Product_Update.cshtml" />
+    <Content Include="Areas\Admin\Views\Product_Manage\ProductType_Update.cshtml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />

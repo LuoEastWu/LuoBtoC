@@ -23,6 +23,14 @@ namespace SqlModel
         /// </summary>
         public string menuName { get; set; }
         /// <summary>
+        /// 菜单视图
+        /// </summary>
+        public string MenuAction { get; set; }
+        /// <summary>
+        /// 菜单控制器
+        /// </summary>
+        public string MenuControl { get; set; }
+        /// <summary>
         /// 父类型
         /// </summary>
         public int Fid { get; set; }

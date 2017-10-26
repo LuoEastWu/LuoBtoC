@@ -42,6 +42,7 @@
     <Compile Include="bll_Advert.cs" />
     <Compile Include="Bll_Brand.cs" />
     <Compile Include="Bll_Collection.cs" />
+    <Compile Include="bll_ComDataList.cs" />
     <Compile Include="bll_InformationType.cs" />
     <Compile Include="bll_Member.cs" />
     <Compile Include="bll_MenuInfo.cs" />
