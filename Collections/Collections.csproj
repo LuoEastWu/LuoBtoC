@@ -60,6 +60,7 @@
     <Content Include="dll\System.Net.Http.WebRequest.dll" />
     <Content Include="dll\System.Web.Mvc.dll" />
     <Content Include="dll\WebMatrix.Data.dll" />
+    <Content Include="dll\WebMatrix.Data.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

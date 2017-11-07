@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComDataList.cs" />
     <Compile Include="dal_Advert.cs" />
     <Compile Include="dal_Brand.cs" />
     <Compile Include="Dal_Collection.cs" />

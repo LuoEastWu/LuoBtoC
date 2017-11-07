@@ -16,9 +16,13 @@ namespace Collections
         ///点击分页是指向 Action 的名字 根据具体需要而定
         /// </summary>
         public virtual string ActionName {get;set;}
-      
+        /// <summary>
+        /// 总数
+        /// </summary>
         public int TotalCount { get; set; }
-
+        /// <summary>
+        /// 当前页
+        /// </summary>
         public int CurrentIndex { get; set; }
         public int TotalPages
         {

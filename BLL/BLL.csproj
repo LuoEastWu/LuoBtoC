@@ -51,6 +51,7 @@
     <Compile Include="bll_Review.cs" />
     <Compile Include="BLL_Information.cs" />
     <Compile Include="bll_UserInfo.cs" />
+    <Compile Include="ComDataList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
