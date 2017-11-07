@@ -55,6 +55,12 @@
       <Name>SqlModel</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="dll\System.Net.Http.dll" />
+    <Content Include="dll\System.Net.Http.WebRequest.dll" />
+    <Content Include="dll\System.Web.Mvc.dll" />
+    <Content Include="dll\WebMatrix.Data.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
