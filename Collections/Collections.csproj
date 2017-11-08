@@ -46,6 +46,7 @@
     <Compile Include="EnCode.cs" />
     <Compile Include="HtmlHelperExtensions.cs" />
     <Compile Include="ModelConvertHelper.cs" />
+    <Compile Include="MultiButtonAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="publicHandle.cs" />
   </ItemGroup>
@@ -54,6 +55,13 @@
       <Project>{57bcb18d-2bf8-4210-8124-8df0806eb307}</Project>
       <Name>SqlModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="dll\System.Net.Http.dll" />
+    <Content Include="dll\System.Net.Http.WebRequest.dll" />
+    <Content Include="dll\System.Web.Mvc.dll" />
+    <Content Include="dll\WebMatrix.Data.dll" />
+    <Content Include="dll\WebMatrix.Data.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

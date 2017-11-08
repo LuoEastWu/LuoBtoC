@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Product_Manage";
 }
+@model SqlModel.Home.ProductModel
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -11,9 +12,20 @@
     <link href="../style/style.css" rel="stylesheet" type="text/css" />
     <script src="../js/common.js" type="text/javascript"></script>
     <script src="../js/jquery.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <script src="~/Scripts/jquery-1.8.2.intellisense.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+       function chuancan(参数) {
+           window.loacation.href = 'down.aspx?参数名=‘参数’';
+       }
+
+    </script>
 </head>
 <body topmargin="0px" bottommargin="0px" leftmargin="0px" rightmargin="0px" onload="controlInputNumber()">
-    <form id="form1" runat="server">
+   
         <div class="forms1">
             <div class="forms2">
                 <span>
@@ -21,7 +33,7 @@
                 </span>
                 <div class="forms4">
                     <a href="Product_Add.aspx" class="forms4_1">商品添加</a>
-                    <asp:Button ID="btndel" runat="server" Text="批量删除" OnClick="btndel_Click" OnClientClick="getCheckedDelIds();" style="cursor:pointer" onmouseout="this.style.backgroundImage='url(../images/other/blue1.png)'" onmouseover="this.style.backgroundImage='url(../images/other/blue2.png)'" />
+                    <input type="submit" ID="btndel" runat="server" Text="批量删除" OnClick="btndel_Click" OnClientClick="getCheckedDelIds();" style="cursor:pointer" onmouseout="this.style.backgroundImage='url(../images/other/blue1.png)'" onmouseover="this.style.backgroundImage='url(../images/other/blue2.png)'" />
                 </div>
             </div>
             <div style="border:1px solid #FFFFFF">
@@ -29,12 +41,14 @@
                     <tr>
                         <td class="forms5_1" nowrap="nowrap" align="left">
                             <span style="color:Black">商品名称：</span>
-                            <asp:TextBox ID="txtProductName" runat="server"></asp:TextBox>
+                            <input name="txtProductName" id="txtProductName" type="text" />
+
                             &emsp;
+
                             <span style="color:Black">商品类型：</span>
-                            <asp:DropDownList ID="ddlProductType" runat="server"></asp:DropDownList>
+                            @Html.DropDownList("ddlProductType", ViewBag.deptSelectItems as IEnumerable<SelectListItem>)
                             &emsp;
-                            <asp:ImageButton ID="btnquery" runat="server" Text="" OnClick="btnquery_Click" ImageUrl="../images/blue/search.jpg" Height="21px" Width="58px" style="vertical-align:middle" />
+                            <input onclick="chuancan(123)" name="btnquery" id="btnquery" text="" src="../images/blue/search.jpg" style="height:21px;width:58px;border-width:0px;vertical-align:middle" type="image" />
 
                         </td>
                     </tr>
@@ -77,43 +91,52 @@
                                         <span style="color:Black">操作</span>
                                     </td>
                                 </tr>
-                                <asp:Repeater runat="server" ID="rptProduct" OnItemCommand="rptProduct_ItemCommand">
-                                    <ItemTemplate>
-                                        <tr onmouseover="this.style.background='#F3FBCA'" onmouseout="this.style.background='#ffffff';">
-                                            <td class="forms6_3" style="width:28px" align="center">
-                                                <input type="checkbox" name="chkChooseaudit" value="<%#Eval(" ID")%>" onclick="ChooseItemClick(this);" />
-                                            </td>
-                                            <td class="forms6_3" align="left">
-                                                <span style="color:Black"><%# publicHandle.GetSubstring(Eval("ProductName").ToString(),10,"...")%></span>
-                                            </td>
-                                            <td class="forms6_3" align="left">
-                                                <span style="color:Black"><%# getProductTypeName(Eval("ProductTypeId").ToString())%></span>
-                                            </td>
-                                            <td class="forms6_3" align="left">
-                                                <span style="color:Black"><%# publicHandle.GetSubstring(Eval("Description").ToString(), 10, "...")%></span>
-                                            </td>
-                                            <td class="forms6_3" align="left">
-                                                <span style="color:Black"><%# getBrandName(Eval("Brand").ToString())%></span>
-                                            </td>
-                                            <td class="forms6_3" align="left">
-                                                <span style="color:Black"><%# Eval("Spec")%></span>
-                                            </td>
-                                            <td class="forms6_3" align="left">
-                                                <span style="color:Black"><%# Eval("MarketPrice")%></span>
-                                            </td>
-                                            <td class="forms6_3" align="left">
-                                                <span style="color:Black"><%# Eval("WebsitePrice")%></span>
-                                            </td>
-                                            <td class="forms6_3" align="left">
-                                                <span style="color:Black"><%# DateTime.Parse(Eval("CreateDate").ToString()).ToString("yyyy-MM-dd HH:mm:ss")%></span>
-                                            </td>
-                                            <td class="forms6_4" align="left">
-                                                <a href="Product_Update.aspx?id=<%#  Eval(" ID") %>">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <asp:LinkButton Text="删除" runat="server" ID="linkbtnDelete" CommandName="Del" style="cursor:hand;" CommandArgument='<%# Eval("ID") %>' OnClientClick="javascript:return confirm('您确实要删除吗！')" />
-                                            </td>
-                                        </tr>
-                                    </ItemTemplate>
-                                </asp:Repeater>
+                                @{
+                                    if (Model != null)
+                                    {
+                                        foreach (var v in Model.ProList)
+                                        {
+                                            <tr onmouseover="this.style.background='#F3FBCA'" onmouseout="this.style.background='#ffffff';">
+                                                <td class="forms6_3" style="width:28px" align="center">
+                                                    <input type="checkbox" name="chkChooseaudit" value="@v.ID" onclick="ChooseItemClick(this);" />
+                                                </td>
+                                                <td class="forms6_3" align="left">
+                                                    <span style="color:Black">@Collections.publicHandle.GetSubstring(v.ProductName, 10, "....") </span>
+                                                </td>
+                                                <td class="forms6_3" align="left">
+                                                    <span style="color:Black">@LuoBtoC.Areas.Admin.Controllers.Product_ManageController.getProductTypeName(v.ProductTypeId.ToString())</span>
+                                                </td>
+                                                <td class="forms6_3" align="left">
+                                                    <span style="color:Black">@Collections.publicHandle.GetSubstring(v.Description, 10, "....")</span>
+                                                </td>
+                                                <td class="forms6_3" align="left">
+                                                    <span style="color:Black">@LuoBtoC.Areas.Admin.Controllers.Product_ManageController.getBrandName(v.Brand.ToString())</span>
+                                                </td>
+                                                <td class="forms6_3" align="left">
+                                                    <span style="color:Black">@v.Spec</span>
+                                                </td>
+                                                <td class="forms6_3" align="left">
+                                                    <span style="color:Black">@v.MarketPrice</span>
+                                                </td>
+                                                <td class="forms6_3" align="left">
+                                                    <span style="color:Black">@v.WebsitePrice</span>
+                                                </td>
+                                                <td class="forms6_3" align="left">
+                                                    <span style="color:Black">@DateTime.Parse(v.CreateDate.ToString()).ToString("yyyy-MM-dd HH:mm:ss")</span>
+                                                </td>
+                                                <td class="forms6_4" align="left">
+                                                    <a href="Product_Update.aspx?id=@v.ID">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    @Html.ActionLink("删除", "clear", null, new { ID = "linkbtnDelete", style = "cursor:hand;", CommandName = "Del", CommandArgument = v.ID, onclick = "return confirm('您确实要删除吗！')" })
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+
+                                }
+
+
                             </table>
                             <div id="data_page_div" runat="server">
                                 <div>
@@ -125,10 +148,7 @@
                                             </td>
                                             <td runat="server" id="trRecord">
                                                 <nobr>
-                                                    <webdiyer:AspNetPager ID="pager" PageSize="10" runat="server" CssClass="_tab_page_div" UrlPaging="True" FirstPageText="【首页】"
-                                                                          LastPageText="【尾页】" NextPageText="【下一页】" NumericButtonCount="5" PrevPageText="【上一页】"
-                                                                          CustomInfoClass="_tab_pager_div1" ShowCustomInfoSection="left" EnableUrlRewriting="false" PageIndexBoxClass="page_box_ipt" SubmitButtonClass="page_btn_go" SubmitButtonText="" ShowInputBox="Never">
-                                                    </webdiyer:AspNetPager>
+                                                    @Html.Partial("~/Views/Shared/BasePage.cshtml", ViewData["pagemodel"])
                                                 </nobr>
                                             </td>
                                         </tr>
@@ -140,6 +160,6 @@
                 </table>
             </div>
         </div>
-    </form>
+
 </body>
 </html>
