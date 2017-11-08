@@ -42,8 +42,9 @@ namespace LuoBtoC.Areas.Admin.Controllers
                 {
                     Session["urlLink"] = Request.RawUrl;
                 }
-                //bing_dd_type();
-                productM= BindDate();
+                SelectList selList1 = new SelectList(bing_dd_type(),  "idDepth", "TypeName");
+                ViewBag.deptSelectItems = selList1;
+                productM = BindDate();
             }
 
             return View(productM);
@@ -204,6 +205,118 @@ namespace LuoBtoC.Areas.Admin.Controllers
                 return "";
             }
         }
+
+        BLL.ComDataList combll = new BLL.ComDataList();
+        /// <summary>
+        /// 一级菜单下拉框
+        /// </summary>
+        public List<LuoBtoC.Areas.Admin.Models.ProductTypeList>  bing_dd_type()
+        {
+            try
+            {
+                List<LuoBtoC.Areas.Admin.Models.ProductTypeList> ddlProductType = new List<LuoBtoC.Areas.Admin.Models.ProductTypeList>();
+                DataTable dt = new DataTable();
+                if (Request.QueryString["TypeId"] == null || Request.QueryString["TypeId"] == "" || Request.QueryString["TypeId"] == "0")
+                {
+                    
+                    ddlProductType.Add(new Models.ProductTypeList() { TypeName = "所有商品类型", idDepth = "0,-1" });
+                    dt = combll.GetComList<SqlModel.ProductType>(0, " id,TypeName,Depth ",  " isdelete=0 and depth=0 and Fid=0 ", " Sort asc,id desc ");
+                }
+                else
+                {
+                    dt = combll.GetComList<SqlModel.ProductType>(0, " id,TypeName,Depth ",  " isdelete=0 and id=" + Request.QueryString["TypeId"], " Sort asc,id desc ");
+                }
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        ddlProductType.Add(new Models.ProductTypeList()
+                        {
+                            TypeName = "╋" + dt.Rows[i]["TypeName"].ToString(),
+                            idDepth = dt.Rows[i]["id"].ToString() + "," + dt.Rows[i]["Depth"].ToString()
+                        });
+                        ddlProductType.AddRange(BindChild(dt.Rows[i]["id"].ToString(), Convert.ToInt32(dt.Rows[i]["Depth"].ToString()) + 1));
+                    }
+                }
+                return ddlProductType;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        /// <summary>
+        /// 绑定子下拉框
+        /// </summary>
+        /// <param name="fatherid"></param>
+        /// <param name="depth"></param>
+        public List<LuoBtoC.Areas.Admin.Models.ProductTypeList> BindChild(string fatherid, int depth)
+        {
+            try
+            {
+                DataTable dt = combll.GetComList<SqlModel.ProductType>(0, " id,TypeName,Depth "," isdelete=0 and Depth=" + depth + " and Fid=" + fatherid + " ", " Sort asc,id desc ");
+                List<LuoBtoC.Areas.Admin.Models.ProductTypeList> weightList = new List<LuoBtoC.Areas.Admin.Models.ProductTypeList>();
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        string separator = "├──";
+                        if (depth > 1)
+                        {
+                            for (int j = 2; j <= depth; j++)
+                            {
+                                separator += "──";
+                            }
+                        }
+                        weightList.Add(new Models.ProductTypeList()
+                        {
+                            TypeName =separator+ dt.Rows[i]["TypeName"].ToString(),
+                            idDepth = dt.Rows[i]["id"].ToString() + "," + dt.Rows[i]["Depth"].ToString()
+                        });
+                        BindChild(dt.Rows[i]["id"].ToString(), Convert.ToInt32(dt.Rows[i]["Depth"].ToString()) + 1);
+                    }
+                    
+                }
+                return weightList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        string[] numstr = { "Page", "page", "productname", "producttypeids", "Ids" };
+        
+        [HttpPost]
+        public ActionResult btnquery(string id)
+        {
+          var dd=  Request.Form["ddlProductType"];
+            string url = Request.Url.ToString();
+            url = url.Substring(url.LastIndexOf('/') + 1);
+            url =Collections.publicHandle.GetSubStr(numstr, url);
+            string productname = dd;
+            //string producttypeids = this.ddlProductType.SelectedValue;
+            //getIds(this.ddlProductType.SelectedValue.Split(new char[] { ',' })[0]);
+            if (url.IndexOf('?') > -1)
+            {
+                //Response.Redirect(url + "&productname=" + productname + "&producttypeids=" + producttypeids + "&Ids=" + Ids);
+            }
+            else
+            {
+                //Response.Redirect(url + "?productname=" + productname + "&producttypeids=" + producttypeids + "&Ids=" + Ids);
+            }
+            return View();
+        }
+
+
+
+
+
+
+
+
+
 
         public ActionResult ProductType_Manage()
         {

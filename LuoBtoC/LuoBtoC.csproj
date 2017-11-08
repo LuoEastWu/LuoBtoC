@@ -200,6 +200,7 @@
     <Compile Include="Areas\Admin\Controllers\Product_ManageController.cs" />
     <Compile Include="Areas\Admin\Models\LoginModel.cs" />
     <Compile Include="Areas\Admin\Models\MenuInfoModel.cs" />
+    <Compile Include="Areas\Admin\Models\ProductTypeList.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MasterPageController.cs" />

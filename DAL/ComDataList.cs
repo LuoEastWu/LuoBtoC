@@ -22,13 +22,13 @@ namespace DAL
         {
             try
             {
-                DataTable table=new DataTable();
+                DataTable table = new DataTable();
                 SqlSugar.StartSqlSugar.GetInstance((db) =>
                 {
                     table = db.Queryable<T>()
                             .Where(where)
                             .OrderBy(fieldorder)
-                            .Take(top)
+                            .Take(top==0?int.MaxValue:top)
                             .Select(fields)
                             .ToDataTable();
                 });

@@ -46,6 +46,7 @@
     <Compile Include="EnCode.cs" />
     <Compile Include="HtmlHelperExtensions.cs" />
     <Compile Include="ModelConvertHelper.cs" />
+    <Compile Include="MultiButtonAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="publicHandle.cs" />
   </ItemGroup>
