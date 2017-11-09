@@ -18,7 +18,7 @@ namespace DAL
         public List<SqlModel.InformationType> GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
         {
             List<SqlModel.InformationType> informationList = new List<SqlModel.InformationType>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 informationList = db.Queryable<SqlModel.InformationType>()
                                     .Where(strWhere)
@@ -34,7 +34,7 @@ namespace DAL
         {
             SqlModel.InformationType model = new SqlModel.InformationType();
             DataTable dt = new DataTable();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 dt = db.Ado.UseStoredProcedure().GetDataTable("InformationType_GetModel", new SqlSugar.SugarParameter[]
                 {
@@ -95,7 +95,7 @@ namespace DAL
         public List<SqlModel.InformationType> GetList(string p)
         {
             List<SqlModel.InformationType> infList=new List<SqlModel.InformationType>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 infList = db.Queryable<SqlModel.InformationType>()
                           .Where(p)

@@ -24,7 +24,7 @@ namespace LuoBtoC
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
-            SqlSugar.StartSqlSugar._connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString();
+            Collections.StartSqlSugar._connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString();
         }
     }
 }

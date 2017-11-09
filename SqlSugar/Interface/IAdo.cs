@@ -23,9 +23,10 @@ namespace SqlSugar
         IDataParameterCollection DataReaderParameters { get; set; }
         CommandType CommandType { get; set; }
         bool IsEnableLogEvent { get; set; }
-        Action<string, string> LogEventStarting { get; set; }
-        Action<string, string> LogEventCompleted { get; set; }
+        Action<string, SugarParameter []> LogEventStarting { get; set; }
+        Action<string, SugarParameter []> LogEventCompleted { get; set; }
         Func<string, SugarParameter[], KeyValuePair<string, SugarParameter[]>> ProcessingEventStartingSQL { get; set; }
+        Action<Exception> ErrorEvent { get; set; }
         bool IsClearParameters { get; set; }
         int CommandTimeOut { get; set; }
         IDbBind DbBind { get; }
@@ -62,7 +63,7 @@ namespace SqlSugar
         DateTime GetDateTime(string sql, object parameters);
         DateTime GetDateTime(string sql, params SugarParameter[] parameters);
         DateTime GetDateTime(string sql, List<SugarParameter> parameters);
-        List<T> SqlQuery<T>(string sql, object whereObj = null);
+        List<T> SqlQuery<T>(string sql, object parameters = null);
         List<T> SqlQuery<T>(string sql, params SugarParameter[] parameters);
         List<T> SqlQuery<T>(string sql, List<SugarParameter> parameters);
         T SqlQuerySingle<T>(string sql, object whereObj = null);

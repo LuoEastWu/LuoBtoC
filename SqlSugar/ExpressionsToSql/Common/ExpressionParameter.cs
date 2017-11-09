@@ -36,5 +36,12 @@ namespace SqlSugar
                 return this.IsLeft == true ? this.BaseParameter.RightExpression : this.BaseParameter.LeftExpression;
             }
         }
+        public bool IsSetTempData
+        {
+            get
+            {
+                return BaseParameter.CommonTempData.HasValue() && BaseParameter.CommonTempData.Equals(CommonTempDataType.Result);
+            }
+        }
     }
 }

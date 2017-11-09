@@ -30,12 +30,26 @@ namespace SqlSugar
             RestoreMapping();
             return Db.ExecuteCommand(sql, paramters);
         }
+        public bool ExecuteCommandHasChange()
+        {
+            return ExecuteCommand() > 0;
+        }
         public Task<int> ExecuteCommandAsync()
         {
             Task<int> result = new Task<int>(() =>
             {
                 IDeleteable<T> asyncDeleteable = CopyDeleteable();
                 return asyncDeleteable.ExecuteCommand();
+            });
+            result.Start();
+            return result;
+        }
+        public Task<bool> ExecuteCommandHasChangeAsync()
+        {
+            Task<bool> result = new Task<bool>(() =>
+            {
+                IDeleteable<T> asyncDeleteable = CopyDeleteable();
+                return asyncDeleteable.ExecuteCommand() > 0;
             });
             result.Start();
             return result;
@@ -60,7 +74,7 @@ namespace SqlSugar
             string tableName = this.Context.EntityMaintenance.GetTableName<T>();
             var primaryFields = this.GetPrimaryKeys();
             var isSinglePrimaryKey = primaryFields.Count == 1;
-            Check.ArgumentNullException(primaryFields, string.Format("Table {0} with no primarykey", tableName));
+            Check.Exception(primaryFields.IsNullOrEmpty(), string.Format("Table {0} with no primarykey", tableName));
             if (isSinglePrimaryKey)
             {
                 List<object> primaryKeyValues = new List<object>();
@@ -92,7 +106,7 @@ namespace SqlSugar
                 {
                     StringBuilder orString = new StringBuilder();
                     var isFirst = deleteObjs.IndexOf(deleteObj) == 0;
-                    if (isFirst)
+                    if (!isFirst)
                     {
                         orString.Append(DeleteBuilder.WhereInOrTemplate + UtilConstants.Space);
                     }
@@ -100,7 +114,7 @@ namespace SqlSugar
                     StringBuilder andString = new StringBuilder();
                     foreach (var primaryField in primaryFields)
                     {
-                        if (i == 0)
+                        if (i != 0)
                             andString.Append(DeleteBuilder.WhereInAndTemplate + UtilConstants.Space);
                         var entityPropertyName = this.Context.EntityMaintenance.GetPropertyName<T>(primaryField);
                         var columnInfo = EntityInfo.Columns.Single(it => it.PropertyName == entityPropertyName);
@@ -159,6 +173,14 @@ namespace SqlSugar
             DeleteBuilder.Parameters.AddRange(parameters);
             return this;
         }
+
+        public IDeleteable<T> RemoveDataCache()
+        {
+            var cacheService = this.Context.CurrentConnectionConfig.ConfigureExternalServices.DataInfoCacheService;
+            CacheSchemeMain.RemoveCache(cacheService, this.Context.EntityMaintenance.GetTableName<T>());
+            return this;
+        }
+
         public IDeleteable<T> In<PkType>(List<PkType> primaryKeyValues)
         {
             if (primaryKeyValues == null || primaryKeyValues.Count() == 0)
@@ -188,7 +210,7 @@ namespace SqlSugar
             {
                 if (DeleteBuilder.BigDataInValues == null)
                     DeleteBuilder.BigDataInValues = new List<object>();
-                DeleteBuilder.BigDataInValues.AddRange(primaryKeyValues.Select(it=>(object)it));
+                DeleteBuilder.BigDataInValues.AddRange(primaryKeyValues.Select(it => (object)it));
                 DeleteBuilder.BigDataFiled = primaryField;
             }
             return this;
@@ -228,7 +250,7 @@ namespace SqlSugar
             }
         }
 
-        private List<string> GetIdentityKeys()
+        protected virtual List<string> GetIdentityKeys()
         {
             if (this.Context.IsSystemTablesConfig)
             {
@@ -248,8 +270,9 @@ namespace SqlSugar
             }
         }
 
-        private IDeleteable<T> CopyDeleteable() {
-            var asyncContext = this.Context.Utilities.CopyContext(this.Context,true);
+        private IDeleteable<T> CopyDeleteable()
+        {
+            var asyncContext = this.Context.Utilities.CopyContext(true);
             asyncContext.CurrentConnectionConfig.IsAutoCloseConnection = true;
 
             var asyncDeleteable = asyncContext.Deleteable<T>();

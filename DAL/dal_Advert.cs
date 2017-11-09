@@ -14,7 +14,7 @@ namespace DAL
         public List<SqlModel.Advert> GetList(int Top, string strWhere, string filedOrder)
         {
             List<SqlModel.Advert> advertList=new List<SqlModel.Advert>();
-            SqlSugar.StartSqlSugar.GetInstance((db) => 
+            Collections.StartSqlSugar.GetInstance((db) => 
             {
                 advertList = db.Queryable<SqlModel.Advert>()
                                .Where(strWhere)

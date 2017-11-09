@@ -49,11 +49,16 @@
     <Compile Include="MultiButtonAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="publicHandle.cs" />
+    <Compile Include="StartSqlSugar.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SqlModel\SqlModel.csproj">
       <Project>{57bcb18d-2bf8-4210-8124-8df0806eb307}</Project>
       <Name>SqlModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SqlSugar\SqlSugar.csproj">
+      <Project>{489bb790-226c-4fad-8d1e-51d72a7ff8e5}</Project>
+      <Name>SqlSugar</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -28,6 +28,7 @@ namespace SqlSugar
         public bool IsNoInsertNull { get; set; }
         public bool IsReturnIdentity { get; set; }
         public EntityInfo EntityInfo { get; set; }
+        public Dictionary<string, int> OracleSeqInfoList { get; set; }
         #endregion
 
         #region SqlTemplate
@@ -87,7 +88,7 @@ namespace SqlSugar
             {
                 var result = Builder.GetTranslationTableName(EntityInfo.EntityName);
                 result += UtilConstants.Space;
-                if (this.TableWithString.IsValuable())
+                if (this.TableWithString.HasValue())
                 {
                     result += TableWithString + UtilConstants.Space;
                 }
@@ -164,6 +165,11 @@ namespace SqlSugar
                         date = Convert.ToDateTime("1900-1-1");
                     }
                     return "'" + date.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'";
+                }
+                else if (type == UtilConstants.ByteArrayType)
+                {
+                    string bytesString = System.Text.Encoding.ASCII.GetString((byte[])value);
+                    return "N'" + bytesString + "'";
                 }
                 else if (type.IsEnum())
                 {

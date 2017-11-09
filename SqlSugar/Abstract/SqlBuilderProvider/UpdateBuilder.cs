@@ -93,7 +93,7 @@ namespace SqlSugar
             {
                 var result = Builder.GetTranslationTableName(TableName);
                 result += UtilConstants.Space;
-                if (this.TableWithString.IsValuable())
+                if (this.TableWithString.HasValue())
                 {
                     result += TableWithString + UtilConstants.Space;
                 }
@@ -175,13 +175,13 @@ namespace SqlSugar
                     {
                         updateTable.Append(SqlTemplateBatchUnion);
                     }
-                    updateTable.Append("\r\n SELECT " + string.Join(",", columns.Select(it => string.Format(SqlTemplateBatchSelect, FormatValue(it.Value),Builder.GetTranslationColumnName(it.DbColumnName)))));
+                    updateTable.Append("\r\n SELECT " + string.Join(",", columns.Select(it => string.Format(SqlTemplateBatchSelect, FormatValue(it.Value), Builder.GetTranslationColumnName(it.DbColumnName)))));
                     ++i;
                 }
                 pageIndex++;
                 updateTable.Append("\r\n");
                 string whereString = null;
-                if (this.WhereValues.IsValuable())
+                if (this.WhereValues.HasValue())
                 {
                     foreach (var item in WhereValues)
                     {
@@ -190,7 +190,7 @@ namespace SqlSugar
                         whereString += item;
                     }
                 }
-                else if (PrimaryKeys.IsValuable())
+                else if (PrimaryKeys.HasValue())
                 {
                     foreach (var item in PrimaryKeys)
                     {
@@ -210,7 +210,7 @@ namespace SqlSugar
             {
                 if (SetValues.IsValuable())
                 {
-                    var setValue = SetValues.Where(sv => it.IsPrimarykey == false && (it.IsIdentity == false || (IsOffIdentity && it.IsIdentity))).Where(sv => sv.Key == Builder.GetTranslationColumnName(it.DbColumnName));
+                    var setValue = SetValues.Where(sv => it.IsPrimarykey == false && (it.IsIdentity == false || (IsOffIdentity && it.IsIdentity))).Where(sv => sv.Key == Builder.GetTranslationColumnName(it.DbColumnName) || sv.Key == Builder.GetTranslationColumnName(it.PropertyName));
                     if (setValue != null && setValue.Any())
                     {
                         return setValue.First().Value;
@@ -220,7 +220,7 @@ namespace SqlSugar
                 return result;
             }));
             string whereString = null;
-            if (this.WhereValues.IsValuable())
+            if (this.WhereValues.HasValue())
             {
                 foreach (var item in WhereValues)
                 {
@@ -229,7 +229,7 @@ namespace SqlSugar
                     whereString += item;
                 }
             }
-            else if (PrimaryKeys.IsValuable())
+            else if (PrimaryKeys.HasValue())
             {
                 foreach (var item in PrimaryKeys)
                 {
@@ -258,6 +258,11 @@ namespace SqlSugar
                         date = Convert.ToDateTime("1900-1-1");
                     }
                     return "'" + date.ToString("yyyy-MM-dd HH:mm:ss.fff") + "'";
+                }
+                else if (type == UtilConstants.ByteArrayType)
+                {
+                    string bytesString = System.Text.Encoding.ASCII.GetString((byte[])value);
+                    return "N'" + bytesString + "'";
                 }
                 else if (type.IsEnum())
                 {

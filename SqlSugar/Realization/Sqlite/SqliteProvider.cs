@@ -61,7 +61,7 @@ namespace SqlSugar
             {
                 sqlCommand.Transaction = (SQLiteTransaction)this.Transaction;
             }
-            if (parameters.IsValuable())
+            if (parameters.HasValue())
             {
                 IDataParameter[] ipars = ToIDbDataParameter(parameters);
                 sqlCommand.Parameters.AddRange((SQLiteParameter[])ipars);
@@ -93,7 +93,7 @@ namespace SqlSugar
                 sqlParameter.Value = parameter.Value;
                 sqlParameter.DbType = parameter.DbType;
                 result[index] = sqlParameter;
-                if (sqlParameter.Direction == ParameterDirection.Output) {
+                if (sqlParameter.Direction.IsIn(ParameterDirection.Output, ParameterDirection.InputOutput)) { 
                     if (this.OutputParameters == null) this.OutputParameters = new List<IDataParameter>();
                     this.OutputParameters.RemoveAll(it => it.ParameterName == sqlParameter.ParameterName);
                     this.OutputParameters.Add(sqlParameter);

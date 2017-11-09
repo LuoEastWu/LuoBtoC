@@ -17,7 +17,7 @@ namespace DAL
         public List<ProductType> GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
         {
             List<ProductType> proList = new List<ProductType>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
 
                 proList = db.Queryable<ProductType>()
@@ -31,7 +31,7 @@ namespace DAL
         public List<SqlModel.ProductType> GetPage(string whereStr,string filedOrder) 
         {
             List<SqlModel.ProductType> mode = new List<ProductType>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 mode = db.Queryable<SqlModel.ProductType>()
                          .Where(whereStr)
@@ -46,7 +46,7 @@ namespace DAL
 
             SqlModel.ProductType model = new SqlModel.ProductType();
             DataTable dt = new DataTable();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 dt = db.Ado.UseStoredProcedure().GetDataTable("ProductType_GetModel", new SqlSugar.SugarParameter[]
                 {
@@ -106,7 +106,7 @@ namespace DAL
         public List<ProductType> GetList(string strWhere)
         {
             List<SqlModel.ProductType> proList = new List<ProductType>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 proList = db.Queryable<SqlModel.ProductType>()
                            .Where(strWhere)

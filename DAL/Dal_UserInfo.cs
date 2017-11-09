@@ -10,7 +10,7 @@ namespace DAL
         public List<SqlModel.UserInfo> GetList(string strSql)
         {
             List<SqlModel.UserInfo> userInfo = new List<SqlModel.UserInfo>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 userInfo = db.Queryable<SqlModel.UserInfo>()
                            .Where(strSql)

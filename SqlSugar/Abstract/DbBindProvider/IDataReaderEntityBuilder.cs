@@ -38,6 +38,8 @@ namespace SqlSugar
         private static readonly MethodInfo getInt32 = typeof(IDataRecord).GetMethod("GetInt32", new Type[] { typeof(int) });
         private static readonly MethodInfo getInt64 = typeof(IDataRecord).GetMethod("GetInt64", new Type[] { typeof(int) });
         private static readonly MethodInfo getString = typeof(IDataRecord).GetMethod("GetString", new Type[] { typeof(int) });
+        private static readonly MethodInfo getdatetimeoffset = typeof(IDataRecordExtensions).GetMethod("Getdatetimeoffset");
+        private static readonly MethodInfo getdatetimeoffsetDate = typeof(IDataRecordExtensions).GetMethod("GetdatetimeoffsetDate");
         private static readonly MethodInfo getStringGuid = typeof(IDataRecordExtensions).GetMethod("GetStringGuid");
         private static readonly MethodInfo getConvertStringGuid = typeof(IDataRecordExtensions).GetMethod("GetConvertStringGuid");
         private static readonly MethodInfo getEnum = typeof(IDataRecordExtensions).GetMethod("GetEnum");
@@ -54,11 +56,14 @@ namespace SqlSugar
         private static readonly MethodInfo getConvertInt32 = typeof(IDataRecordExtensions).GetMethod("GetConvertInt32");
         private static readonly MethodInfo getConvertInt64 = typeof(IDataRecordExtensions).GetMethod("GetConvetInt64");
         private static readonly MethodInfo getConvertEnum_Null = typeof(IDataRecordExtensions).GetMethod("GetConvertEnum_Null");
+        private static readonly MethodInfo getConvertdatetimeoffset = typeof(IDataRecordExtensions).GetMethod("GetConvertdatetimeoffset");
+        private static readonly MethodInfo getConvertdatetimeoffsetDate = typeof(IDataRecordExtensions).GetMethod("GetConvertdatetimeoffsetDate");
         private static readonly MethodInfo getOtherNull = typeof(IDataRecordExtensions).GetMethod("GetOtherNull");
         private static readonly MethodInfo getOther = typeof(IDataRecordExtensions).GetMethod("GetOther");
         private static readonly MethodInfo getSqliteTypeNull = typeof(IDataRecordExtensions).GetMethod("GetSqliteTypeNull");
         private static readonly MethodInfo getSqliteType = typeof(IDataRecordExtensions).GetMethod("GetSqliteType");
         private static readonly MethodInfo getEntity = typeof(IDataRecordExtensions).GetMethod("GetEntity", new Type[] { typeof(SqlSugarClient) });
+
         private delegate T Load(IDataRecord dataRecord);
         private Load handler;
         #endregion
@@ -123,7 +128,7 @@ namespace SqlSugar
                 }
                 if (propertyInfo != null && propertyInfo.GetSetMethod() != null)
                 {
-                    if (propertyInfo.PropertyType.IsClass() && propertyInfo.PropertyType != UtilConstants.ByteArrayType)
+                    if (propertyInfo.PropertyType.IsClass() && propertyInfo.PropertyType != UtilConstants.ByteArrayType&&propertyInfo.PropertyType!=UtilConstants.ObjType)
                     {
                         BindClass(generator, result, propertyInfo);
                     }
@@ -169,11 +174,7 @@ namespace SqlSugar
             bool isNullableType = false;
             MethodInfo method = null;
             Type bindPropertyType = UtilMethods.GetUnderType(bindProperty, ref isNullableType);
-            string dbTypeName = DataRecord.GetDataTypeName(ordinal);
-            if (Regex.IsMatch(dbTypeName, @"\(.+\)"))
-            {
-                dbTypeName = Regex.Replace(dbTypeName, @"\(.+\)", "");
-            }
+            string dbTypeName = UtilMethods.GetParenthesesValue(DataRecord.GetDataTypeName(ordinal));
             string propertyName = bindProperty.Name;
             string validPropertyName = bind.GetPropertyTypeName(dbTypeName);
             validPropertyName = validPropertyName == "byte[]" ? "byteArray" : validPropertyName;
@@ -221,7 +222,7 @@ namespace SqlSugar
                     if (bindProperyTypeName.IsContainsIn("int", "int32"))
                         method = isNullableType ? getConvertInt32 : getInt32;
                     if (bindProperyTypeName.IsContainsIn("int64"))
-                        method = isNullableType ? getConvertInt64 : getInt64;
+                        method = isNullableType ? getConvertInt32 : getInt32;
                     if (bindProperyTypeName.IsContainsIn("byte"))
                         method = isNullableType ? getConvertByte : getByte;
                     if (bindProperyTypeName.IsContainsIn("int16"))
@@ -236,7 +237,7 @@ namespace SqlSugar
                     method = getString;
                     if (bindProperyTypeName == "guid")
                     {
-                        method =isNullableType? getConvertStringGuid : getStringGuid;
+                        method = isNullableType ? getConvertStringGuid : getStringGuid;
                     }
                     break;
                 case CSharpDataType.DateTime:
@@ -254,7 +255,7 @@ namespace SqlSugar
                     CheckType(bind.DoubleThrow, bindProperyTypeName, validPropertyName, propertyName);
                     if (bindProperyTypeName == "double")
                         method = isNullableType ? getConvertDouble : getDouble;
-                    if(bindProperyTypeName=="single")
+                    if (bindProperyTypeName == "single")
                         method = isNullableType ? getConvertFloat : getFloat;
                     break;
                 case CSharpDataType.Guid:
@@ -278,6 +279,11 @@ namespace SqlSugar
                     if (bindProperyTypeName == "int64" || bindProperyTypeName == "long")
                         method = isNullableType ? getConvertInt64 : getInt64;
                     break;
+                case CSharpDataType.DateTimeOffset:
+                    method = isNullableType ? getConvertdatetimeoffset : getdatetimeoffset;
+                    if (bindProperyTypeName == "datetime")
+                        method = isNullableType ? getConvertdatetimeoffsetDate : getdatetimeoffsetDate;
+                    break;
                 default:
                     method = getValueMethod;
                     break;
@@ -285,6 +291,10 @@ namespace SqlSugar
             if (method == null && bindPropertyType == UtilConstants.StringType)
             {
                 method = getConvertString;
+            }
+            if (bindPropertyType == UtilConstants.ObjType)
+            {
+                method = getValueMethod;
             }
             if (method == null)
                 method = isNullableType ? getOtherNull.MakeGenericMethod(bindPropertyType) : getOther.MakeGenericMethod(bindPropertyType);

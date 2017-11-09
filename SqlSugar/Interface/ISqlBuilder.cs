@@ -12,6 +12,8 @@ namespace SqlSugar
         CommandType CommandType { get; set; }
         String AppendWhereOrAnd(bool isWhere, string sqlString);
         string AppendHaving(string sqlString);
+        string SqlTranslationLeft { get; }
+        string SqlTranslationRight { get; } 
         SqlQueryBuilder SqlQueryBuilder { get; set; }
         QueryBuilder QueryBuilder { get; set; }
         InsertBuilder InsertBuilder { get; set; }
@@ -27,6 +29,8 @@ namespace SqlSugar
         string GetTranslationColumnName(string propertyName);
         string GetNoTranslationColumnName(string name);
         string GetPackTable(string sql,string shortName);
+        string GetDefaultShortName();
+        string GetUnionAllSql(List<string> sqlList);
         void RepairReplicationParameters(ref string appendSql, SugarParameter[] parameters, int addIndex);
     }
 }

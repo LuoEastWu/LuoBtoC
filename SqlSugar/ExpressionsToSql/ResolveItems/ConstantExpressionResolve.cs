@@ -15,7 +15,7 @@ namespace SqlSugar
             object value = ExpressionTool.GetValue(expression.Value);
             var baseParameter = parameter.BaseParameter;
             baseParameter.ChildExpression = expression;
-            var isSetTempData = baseParameter.CommonTempData.IsValuable() && baseParameter.CommonTempData.Equals(CommonTempDataType.Result);
+            var isSetTempData = baseParameter.CommonTempData.HasValue() && baseParameter.CommonTempData.Equals(CommonTempDataType.Result);
             switch (parameter.Context.ResolveType)
             {
                 case ResolveExpressType.SelectSingle:
@@ -55,7 +55,7 @@ namespace SqlSugar
                         if (value == null && parentIsBinary)
                         {
                             parameter.BaseParameter.ValueIsNull = true;
-                            value = "NULL";
+                            value = this.Context.DbMehtods.Null();
                         }
                         AppendValue(parameter, isLeft, value);
                     }

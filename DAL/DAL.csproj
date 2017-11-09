@@ -55,6 +55,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Collections\Collections.csproj">
+      <Project>{1eec871f-2022-4299-b8b1-02fb0c241391}</Project>
+      <Name>Collections</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SqlModel\SqlModel.csproj">
       <Project>{57bcb18d-2bf8-4210-8124-8df0806eb307}</Project>
       <Name>SqlModel</Name>

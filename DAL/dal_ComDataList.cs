@@ -15,11 +15,11 @@ namespace DAL
             try
             {
                 DataTable table = new DataTable();
-                SqlSugar.StartSqlSugar.GetInstance((db) =>
+                Collections.StartSqlSugar.GetInstance((db) =>
                 {
                     table= db.Queryable<T>()
                             .Where(where)
-                            .OrderBy(fieldorder)
+                            .OrderByIF(SqlSugar.SqlFunc.HasValue(fieldorder), fieldorder)
                             .Select(fields)
                             .Take(top)
                             .ToDataTable();

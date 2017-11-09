@@ -12,7 +12,7 @@ namespace DAL
         public List<SqlModel.Collection> getBasePage(string WhereStr, string filedOrder)
         {
             List<SqlModel.Collection> mode = new List<Collection>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 mode = db.Queryable<SqlModel.Collection>()
                          .Where(WhereStr)
@@ -26,7 +26,7 @@ namespace DAL
         {
             DataTable dt = new DataTable();
             SqlModel.Collection model = new Collection();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 dt = db.Ado.UseStoredProcedure().GetDataTable("Collection_GetModel", new SqlSugar.SugarParameter[]{
                 new SqlSugar.SugarParameter("@ID",ID)
@@ -89,7 +89,7 @@ namespace DAL
         public bool Update(SqlModel.Collection model)
         {
             bool rowsAffected = false;
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 rowsAffected = db.Ado.UseStoredProcedure<bool>(() =>
                 {

@@ -12,7 +12,7 @@ namespace DAL
         public List<SqlModel.MenuInfo> GetList(string strWhere, string filedOrder)
         {
             List<SqlModel.MenuInfo> list = new List<SqlModel.MenuInfo>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 list = db.Queryable<SqlModel.MenuInfo>()
                        .Where(strWhere)

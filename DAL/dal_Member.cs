@@ -15,7 +15,7 @@ namespace DAL
         public List<SqlModel.Member> GetList(string strWhere)
         {
             List<SqlModel.Member> memberList = new List<SqlModel.Member>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 memberList = db.Queryable<SqlModel.Member>()
                                .Where(strWhere)
@@ -46,8 +46,8 @@ namespace DAL
         {
 
             SqlModel.MemberModel.Member model = new SqlModel.MemberModel.Member();
-        
-            SqlSugar.StartSqlSugar.GetInstance((db) => 
+
+            Collections.StartSqlSugar.GetInstance((db) => 
             {
                 var dt = db.Ado.UseStoredProcedure().GetDataTable("Member_GetModel", new { ID = id });
                 if (dt.Rows.Count > 0)
@@ -119,7 +119,7 @@ namespace DAL
         public long Add(SqlModel.MemberModel.Member model)
         {
             long outPutValue=0;
-            SqlSugar.StartSqlSugar.GetInstance((db) => 
+            Collections.StartSqlSugar.GetInstance((db) => 
             {
                
                 var outputResult = db.Ado.UseStoredProcedure<dynamic>(() =>

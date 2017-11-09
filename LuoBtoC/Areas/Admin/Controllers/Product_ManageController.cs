@@ -42,18 +42,19 @@ namespace LuoBtoC.Areas.Admin.Controllers
                 {
                     Session["urlLink"] = Request.RawUrl;
                 }
-                SelectList selList1 = new SelectList(bing_dd_type(),  "idDepth", "TypeName");
+                SelectList selList1 = new SelectList(bing_dd_type(), "idDepth", "TypeName");
                 ViewBag.deptSelectItems = selList1;
-                productM = BindDate();
+
+                productM = BindDate(Request.QueryString["productname"], Request.QueryString["producttypeids"], Request.QueryString["Ids"]);
             }
 
             return View(productM);
         }
 
-        private SqlModel.Home.ProductModel BindDate(string searchkey = "")
+        private SqlModel.Home.ProductModel BindDate(string productname, string producttypeids, string Ids, string searchkey = "")
         {
             BLL.bll_Product bll_Product = new BLL.bll_Product();
-           
+
             string whereStr;
             if (Request.QueryString["producttypeids"] != null && Request.QueryString["producttypeids"] != "")
             {
@@ -73,28 +74,28 @@ namespace LuoBtoC.Areas.Admin.Controllers
             }
 
             #region 按查询条件查询数据
-            if (Request.QueryString["productname"] != null && Request.QueryString["productname"] != "")
+            if (productname != null && productname != "")
             {
-               ViewBag.ProductName = Request.QueryString["productname"].ToString();
+                ViewBag.ProductName = productname;
                 whereStr += " and productname like '%" + Request.QueryString["productname"] + "%'";
             }
-            if (Request.QueryString["producttypeids"] != null && Request.QueryString["producttypeids"] != "")
+            if (producttypeids != null && producttypeids != "")
             {
-                ViewBag.ddlProductTypeValue = Request.QueryString["producttypeids"].ToString();
-                string aa = Request.QueryString["Ids"];
-                whereStr += " and ProductTypeId in(" + Request.QueryString["Ids"] + Request.QueryString["producttypeids"].Split(new char[] { ',' })[0] + ")";
+                ViewBag.ddlProductTypeValue = producttypeids;
+
+                whereStr += " and ProductTypeId in(" + Ids + producttypeids.Split(new char[] { ',' })[0] + ")";
             }
             #endregion
             SqlModel.Home.ProductModel proLIst = new SqlModel.Home.ProductModel();
             proLIst.ProList = bll_Product.GetPage(whereStr, "Id desc");
-           
+
             if (string.IsNullOrEmpty(searchkey))
             {
                 searchkey = string.Empty;
             }
             Collections.BasePageModel page = new Collections.BasePageModel()
             {
-                SearchKeyWord= searchkey,
+                SearchKeyWord = searchkey,
                 CurrentIndex = Int32.Parse("1"),
                 TotalCount = proLIst.ProList.Count,
                 ActionName = "Product_Manage"
@@ -140,7 +141,7 @@ namespace LuoBtoC.Areas.Admin.Controllers
                         strUrl = Session["urlLink"].ToString();
                         Session["urlLink"] = null;
                     }
-                  
+
                     Response.Write(Collections.publicHandle.ShowMessage("删除成功！", "Product_Manage/Product_Manage"));
                     Response.End();
                 }
@@ -210,7 +211,7 @@ namespace LuoBtoC.Areas.Admin.Controllers
         /// <summary>
         /// 一级菜单下拉框
         /// </summary>
-        public List<LuoBtoC.Areas.Admin.Models.ProductTypeList>  bing_dd_type()
+        public List<LuoBtoC.Areas.Admin.Models.ProductTypeList> bing_dd_type()
         {
             try
             {
@@ -218,13 +219,13 @@ namespace LuoBtoC.Areas.Admin.Controllers
                 DataTable dt = new DataTable();
                 if (Request.QueryString["TypeId"] == null || Request.QueryString["TypeId"] == "" || Request.QueryString["TypeId"] == "0")
                 {
-                    
+
                     ddlProductType.Add(new Models.ProductTypeList() { TypeName = "所有商品类型", idDepth = "0,-1" });
-                    dt = combll.GetComList<SqlModel.ProductType>(0, " id,TypeName,Depth ",  " isdelete=0 and depth=0 and Fid=0 ", " Sort asc,id desc ");
+                    dt = combll.GetComList<SqlModel.ProductType>(0, " id,TypeName,Depth ", " isdelete=0 and depth=0 and Fid=0 ", " Sort asc,id desc ");
                 }
                 else
                 {
-                    dt = combll.GetComList<SqlModel.ProductType>(0, " id,TypeName,Depth ",  " isdelete=0 and id=" + Request.QueryString["TypeId"], " Sort asc,id desc ");
+                    dt = combll.GetComList<SqlModel.ProductType>(0, " id,TypeName,Depth ", " isdelete=0 and id=" + Request.QueryString["TypeId"], " Sort asc,id desc ");
                 }
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -254,11 +255,11 @@ namespace LuoBtoC.Areas.Admin.Controllers
         {
             try
             {
-                DataTable dt = combll.GetComList<SqlModel.ProductType>(0, " id,TypeName,Depth "," isdelete=0 and Depth=" + depth + " and Fid=" + fatherid + " ", " Sort asc,id desc ");
+                DataTable dt = combll.GetComList<SqlModel.ProductType>(0, " id,TypeName,Depth ", " isdelete=0 and Depth=" + depth + " and Fid=" + fatherid + " ", " Sort asc,id desc ");
                 List<LuoBtoC.Areas.Admin.Models.ProductTypeList> weightList = new List<LuoBtoC.Areas.Admin.Models.ProductTypeList>();
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    
+
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         string separator = "├──";
@@ -271,12 +272,12 @@ namespace LuoBtoC.Areas.Admin.Controllers
                         }
                         weightList.Add(new Models.ProductTypeList()
                         {
-                            TypeName =separator+ dt.Rows[i]["TypeName"].ToString(),
+                            TypeName = separator + dt.Rows[i]["TypeName"].ToString(),
                             idDepth = dt.Rows[i]["id"].ToString() + "," + dt.Rows[i]["Depth"].ToString()
                         });
                         BindChild(dt.Rows[i]["id"].ToString(), Convert.ToInt32(dt.Rows[i]["Depth"].ToString()) + 1);
                     }
-                    
+
                 }
                 return weightList;
             }
@@ -287,26 +288,69 @@ namespace LuoBtoC.Areas.Admin.Controllers
         }
 
         string[] numstr = { "Page", "page", "productname", "producttypeids", "Ids" };
-        
+
         [HttpPost]
-        public ActionResult btnquery(string id)
+        public ActionResult btnquery(string productname, string producttypeids)
         {
-          var dd=  Request.Form["ddlProductType"];
+
             string url = Request.Url.ToString();
             url = url.Substring(url.LastIndexOf('/') + 1);
-            url =Collections.publicHandle.GetSubStr(numstr, url);
-            string productname = dd;
-            //string producttypeids = this.ddlProductType.SelectedValue;
-            //getIds(this.ddlProductType.SelectedValue.Split(new char[] { ',' })[0]);
+            url = Collections.publicHandle.GetSubStr(numstr, url);
+            getIds(producttypeids.Split(new char[] { ',' })[0]);
+            SqlModel.Home.ProductModel productModel = new SqlModel.Home.ProductModel();
+            productModel = BindDate(productname, producttypeids, Ids);
             if (url.IndexOf('?') > -1)
             {
-                //Response.Redirect(url + "&productname=" + productname + "&producttypeids=" + producttypeids + "&Ids=" + Ids);
+                Response.Redirect(url + "&productname=" + productname + "&producttypeids=" + producttypeids + "&Ids=" + Ids);
             }
             else
             {
-                //Response.Redirect(url + "?productname=" + productname + "&producttypeids=" + producttypeids + "&Ids=" + Ids);
+                Response.Redirect(url + "?productname=" + productname + "&producttypeids=" + producttypeids + "&Ids=" + Ids);
             }
-            return View();
+
+
+            string htmlData = "<tr> <td class=\"forms6_1\" style=\"width: 28px\" align=\"center\"> ";
+
+            htmlData += "<input id = \"chkChooseauditAll\" type=\"checkbox\" onclick=\"ChooseAll(this)\" /> </td>";
+            htmlData += " <td class=\"forms6_1\" align=\"left\"><span style =\"color: Black\" > 商品名称 </ span > </td>";
+            htmlData += "< td class=\"forms6_1\" align=\"left\"><span style = \"color: Black\" > 商品类型 </span></td>";
+            htmlData += " <td class=\"forms6_1\" align=\"left\"> < span style = \"color: Black\" > 描述 </ span ></ td >";
+            htmlData += "< td class=\"forms6_1\" align=\"left\">< span style = \"color: Black\" > 品牌 </ span ></ td >";
+            htmlData += "< td class=\"forms6_1\" align=\"left\">< span style = \"color: Black\" > 规格 </ span ></ td >";
+            htmlData += "< td class=\"forms6_1\" align=\"left\"><span style = \"color: Black\" > 市场价格 </span ></td>";
+            htmlData += "< td class=\"forms6_1\" align=\"left\"><span style = \"color: Black\" > 本网站价格 </span ></td>";
+            htmlData += "< td class=\"forms6_1\" align=\"left\"><span style = \"color: Black\" > 创建时间 </span ></td>";
+            htmlData += "< td class=\"forms6_1\" align=\"left\"><span style = \"color: Black\" > 操作 </span ></td></tr>";
+            if (productModel != null)
+            {
+                foreach (var v in productModel.ProList)
+                {
+                    htmlData += "<tr onmouseover = \"this.style.background = '#F3FBCA'\" onmouseout=\"this.style.background = '#ffffff'; \">";
+
+                    htmlData += "< td class=\"forms6_3\" style=\"width:28px\" align=\"center\">";
+                    htmlData += "<input type =\"checkbox\" name=\"chkChooseaudit\" value=" + @v.ID + " onclick=\"ChooseItemClick(this);\" /></td>";
+                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
+                    htmlData += "< span style = \"color:Black\" >" + Collections.publicHandle.GetSubstring(v.ProductName, 10, "....") + " </ span > </ td >";
+                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
+                    htmlData += "< span style = \"color:Black\" >"; htmlData += "" + LuoBtoC.Areas.Admin.Controllers.Product_ManageController.getProductTypeName(v.ProductTypeId.ToString()) + "</ span ></ td >";
+                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
+                    htmlData += "< span style = \"color:Black\" >" + Collections.publicHandle.GetSubstring(v.Description, 10, "....") + " </ span > </ td >";
+                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
+                    htmlData += "< span style = \"color:Black\" >"; htmlData += "" + LuoBtoC.Areas.Admin.Controllers.Product_ManageController.getBrandName(v.Brand.ToString()) + " </ span ></ td >";
+                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
+                    htmlData += "< span style = \"color:Black\" > " + v.Spec + " </ span ></ td >";
+                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
+                    htmlData += "<span style = \"color:Black\" > " + v.MarketPrice + " </ span ></ td >";
+                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
+                    htmlData += "<span style = \"color:Black\" > " + v.WebsitePrice + " </ span ></ td >";
+                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
+                    htmlData += "<span style = \"color:Black\" >" + DateTime.Parse(v.CreateDate.ToString()).ToString("yyyy-MM-dd HH:mm:ss") + " </ span ></ td >";
+                    htmlData += "< td class=\"forms6_4\" align=\"left\">";
+                    htmlData += "< a href = \"Product_Update.aspx?id=" + v.ID + " > 修改 </ a > &nbsp;&nbsp;&nbsp;&nbsp;";
+                    htmlData += "Html.ActionLink(\"删除\", \"clear\", null, new { ID = \"linkbtnDelete\", style = \"cursor:hand;\", CommandName = \"Del\", CommandArgument = " + v.ID + ", onclick = \"return confirm('您确实要删除吗！')\" })</td></tr>";
+                }
+            }
+            return View(htmlData);
         }
 
 

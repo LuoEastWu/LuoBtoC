@@ -13,7 +13,7 @@ namespace DAL
 
             SqlModel.Brand model = new SqlModel.Brand();
             DataTable dt = new DataTable();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 dt = db.Ado.UseStoredProcedure().GetDataTable("Brand_GetModel", new SqlSugar.SugarParameter[]
                 {

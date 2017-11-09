@@ -10,7 +10,7 @@ namespace DAL
         public List<SqlModel.Review> getPage(string strWhere,string StrOrderBy) 
         {
             List<SqlModel.Review> rev = new List<SqlModel.Review>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 rev = db.Queryable<SqlModel.Review>()
                      .Where(strWhere)

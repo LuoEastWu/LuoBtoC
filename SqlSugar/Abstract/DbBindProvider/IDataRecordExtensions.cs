@@ -132,6 +132,49 @@ namespace SqlSugar
             return reval;
         }
 
+        public static DateTime GetdatetimeoffsetDate(this IDataRecord dr, int i)
+        {
+            if (dr.IsDBNull(i))
+            {
+                return DateTime.MinValue;
+            }
+            var offsetValue = (DateTimeOffset)dr.GetValue(i);
+            var reval = offsetValue.DateTime;
+            return reval;
+        }
+
+        public static DateTime? GetConvertdatetimeoffsetDate(this IDataRecord dr, int i)
+        {
+            if (dr.IsDBNull(i))
+            {
+                return DateTime.MinValue;
+            }
+            var offsetValue = (DateTimeOffset)dr.GetValue(i);
+            var reval = offsetValue.DateTime;
+            return reval;
+        }
+
+        public static DateTimeOffset Getdatetimeoffset(this IDataRecord dr, int i)
+        {
+            if (dr.IsDBNull(i))
+            {
+                return default(DateTimeOffset);
+            }
+            var reval = (DateTimeOffset)dr.GetValue(i);
+            return reval;
+        }
+
+        public static DateTimeOffset? GetConvertdatetimeoffset(this IDataRecord dr, int i)
+        {
+            if (dr.IsDBNull(i))
+            {
+                return default(DateTimeOffset);
+            }
+            var reval = (DateTimeOffset)dr.GetValue(i);
+            return reval;
+        }
+
+
         public static string GetConvertString(this IDataRecord dr, int i)
         {
             if (dr.IsDBNull(i))
@@ -220,6 +263,10 @@ namespace SqlSugar
             else if (type == UtilConstants.BoolType)
             {
                 return (T)Convert.ChangeType(dr.GetBoolean(i), type);
+            }
+            else if (type == UtilConstants.LongType)
+            {
+                return (T)Convert.ChangeType(dr.GetInt64(i), type);
             }
             else if (type == UtilConstants.GuidType)
             {

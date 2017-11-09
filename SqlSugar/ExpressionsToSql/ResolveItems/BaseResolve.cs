@@ -239,9 +239,10 @@ namespace SqlSugar
         protected void AppendNot(object Value)
         {
             var isAppend = !this.Context.Result.Contains(ExpressionConst.FormatSymbol);
+            var lastCharIsSpace = this.Context.Result.LastCharIsSpace;
             if (isAppend)
             {
-                this.Context.Result.Append("NOT");
+                this.Context.Result.Append(lastCharIsSpace?"NOT":" NOT");
             }
             else
             {
@@ -258,7 +259,7 @@ namespace SqlSugar
             newContext.Resolve(item, this.Context.IsJoin ? ResolveExpressType.WhereMultiple : ResolveExpressType.WhereSingle);
             this.Context.Index = newContext.Index;
             this.Context.ParameterIndex = newContext.ParameterIndex;
-            if (newContext.Parameters.IsValuable())
+            if (newContext.Parameters.HasValue())
             {
                 this.Context.Parameters.AddRange(newContext.Parameters);
             }
@@ -276,7 +277,7 @@ namespace SqlSugar
             newContext.Resolve(item, this.Context.IsJoin ? ResolveExpressType.WhereMultiple : ResolveExpressType.WhereSingle);
             this.Context.Index = newContext.Index;
             this.Context.ParameterIndex = newContext.ParameterIndex;
-            if (newContext.Parameters.IsValuable())
+            if (newContext.Parameters.HasValue())
             {
                 this.Context.Parameters.AddRange(newContext.Parameters);
             }
@@ -382,7 +383,7 @@ namespace SqlSugar
                     newContext.Resolve(item, resolveExpressType);
                     this.Context.Index = newContext.Index;
                     this.Context.ParameterIndex = newContext.ParameterIndex;
-                    if (newContext.Parameters.IsValuable())
+                    if (newContext.Parameters.HasValue())
                     {
                         this.Context.Parameters.AddRange(newContext.Parameters);
                     }

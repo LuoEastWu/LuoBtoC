@@ -83,11 +83,14 @@ namespace SqlSugar
             {
                 inValueString = inValues.ToArray().ToJoinSqlInVals();
             }
-            else
+            if (inValueString.IsNullOrEmpty())
             {
                 return " (1=2) ";
             }
-            return string.Format(" ({0} IN ({1})) ", value, inValueString);
+            else
+            {
+                return string.Format(" ({0} IN ({1})) ", value, inValueString);
+            }
         }
 
         public virtual string Equals(MethodCallExpressionModel model)
@@ -268,6 +271,13 @@ namespace SqlSugar
             return string.Format("{0}", parameter1.MemberValue);
         }
 
+        public virtual string IsNull(MethodCallExpressionModel model)
+        {
+            var parameter = model.Args[0];
+            var parameter1 = model.Args[1];
+            return string.Format("ISNULL({0},{1})",parameter.MemberName,parameter1.MemberName);
+        }
+
         public virtual string True()
         {
             return "( 1 = 1 ) ";
@@ -292,7 +302,22 @@ namespace SqlSugar
 
         public virtual string MergeString(params string[] strings)
         {
-            return string.Join("", strings);
+            return string.Join("+", strings);
+        }
+
+        public virtual string Pack(string sql)
+        {
+            return "(" + sql + ")";
+        }
+
+        public virtual string EqualTrue(string fieldName)
+        {
+            return "( " + fieldName + "=1 )";
+        }
+
+        public virtual string Null()
+        {
+            return "NULL";
         }
     }
 }

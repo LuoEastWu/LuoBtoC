@@ -14,25 +14,31 @@ namespace SqlSugar
         {
             get
             {
-                return null;
+                throw new NotSupportedException();
             }
         }
         protected override string GetTableInfoListSql
         {
             get
             {
-                return @"SELECT s.Name,Convert(varchar(max),tbp.value) as Description
-                            FROM sysobjects s
-					     	LEFT JOIN sys.extended_properties as tbp ON s.id=tbp.major_id and tbp.minor_id=0  WHERE s.xtype IN('U') AND (tbp.Name='MS_Description' OR tbp.Name is null)";
+                return @"SELECT  table_name name from user_tables where
+                        table_name!='HELP' 
+                        AND table_name NOT LIKE '%$%'
+                        AND table_name NOT LIKE 'LOGMNRC_%'
+                        AND table_name!='LOGMNRP_CTAS_PART_MAP'
+                        AND table_name!='LOGMNR_LOGMNR_BUILDLOG'
+                        AND table_name!='SQLPLUS_PRODUCT_PROFILE'  
+                         ";
             }
         }
         protected override string GetViewInfoListSql
         {
             get
             {
-                return @"SELECT s.Name,Convert(varchar(max),tbp.value) as Description
-                            FROM sysobjects s
-					     	LEFT JOIN sys.extended_properties as tbp ON s.id=tbp.major_id and tbp.minor_id=0  WHERE s.xtype IN('V')  AND (tbp.Name='MS_Description' OR tbp.Name is null)";
+                return @"select view_name name  from user_views 
+                                                WHERE VIEW_name NOT LIKE '%$%'
+                                                AND VIEW_NAME !='PRODUCT_PRIVS'
+                        AND VIEW_NAME NOT LIKE 'MVIEW_%' ";
             }
         }
         #endregion
@@ -129,7 +135,7 @@ namespace SqlSugar
         {
             get
             {
-                return "select top 1 id from sysobjects";
+                return "select  t.table_name from user_tables t  where rownum=1";
             }
         }
         #endregion
@@ -170,12 +176,8 @@ namespace SqlSugar
         {
             string cacheKey = "DbMaintenanceProvider.GetColumnInfosByTableName." + this.SqlBuilder.GetNoTranslationColumnName(tableName).ToLower();
             cacheKey = GetCacheKey(cacheKey);
-            return this.Context.Utilities.GetCacheInstance<List<DbColumnInfo>>().Func(cacheKey,
-                    (cm, key) =>
-                    {
-                        return cm[cacheKey];
-
-                    }, (cm, key) =>
+            return this.Context.Utilities.GetReflectionInoCacheInstance().GetOrCreate(cacheKey,
+                    () =>
                     {
                         string sql = "select * from " + tableName + " WHERE 1=2 ";
                         var oldIsEnableLog = this.Context.Ado.IsEnableLogEvent;
@@ -211,15 +213,12 @@ namespace SqlSugar
         {
             string cacheKey = "DbMaintenanceProvider.GetPrimaryKeyByTableNames." + this.SqlBuilder.GetNoTranslationColumnName(tableName).ToLower();
             cacheKey = GetCacheKey(cacheKey);
-            return this.Context.Utilities.GetCacheInstance<List<string>>().Func(cacheKey,
-                    (cm, key) =>
-                    {
-                        return cm[cacheKey];
-
-                    }, (cm, key) =>
+            return this.Context.Utilities.GetReflectionInoCacheInstance().GetOrCreate(cacheKey,
+                    () =>
                     {
                         var oldIsEnableLog = this.Context.Ado.IsEnableLogEvent;
-                        string sql = @" select cu.COLUMN_name KEYNAME  from user_cons_columns cu, user_constraints au 
+                        this.Context.Ado.IsEnableLogEvent = false;
+                        string sql = @" select distinct cu.COLUMN_name KEYNAME  from user_cons_columns cu, user_constraints au 
                             where cu.constraint_name = au.constraint_name
                             and au.constraint_type = 'P' and au.table_name = '" +tableName.ToUpper()+ @"'";
                         var pks = this.Context.Ado.SqlQuery<string>(sql);

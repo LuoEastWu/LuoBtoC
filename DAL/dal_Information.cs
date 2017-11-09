@@ -10,7 +10,7 @@ namespace DAL
         public List<SqlModel.Information> GetPage(string whereStr, string p)
         {
             List<SqlModel.Information> inflist = new List<SqlModel.Information>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 inflist = db.Queryable<SqlModel.Information>()
                           .Where(whereStr)

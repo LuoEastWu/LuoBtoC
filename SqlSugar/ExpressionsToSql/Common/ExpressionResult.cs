@@ -52,6 +52,12 @@ namespace SqlSugar
                 _Result = value;
             }
         }
+        public bool LastCharIsSpace{
+            get {
+                if (_Result == null|| _Result.Length==0) return true;
+                return _Result.ToString().Last() == UtilConstants.SpaceChar;
+            }
+        }
         #endregion
         public string GetString()
         {
@@ -104,7 +110,7 @@ namespace SqlSugar
 
         public void Append(object parameter)
         {
-            if (this.CurrentParameter.IsValuable() && this.CurrentParameter.AppendType.IsIn(ExpressionResultAppendType.AppendTempDate))
+            if (this.CurrentParameter.HasValue() && this.CurrentParameter.AppendType.IsIn(ExpressionResultAppendType.AppendTempDate))
             {
                 this.CurrentParameter.CommonTempData = parameter;
                 return;
@@ -134,7 +140,7 @@ namespace SqlSugar
 
         public void AppendFormat(string parameter, params object[] orgs)
         {
-            if (this.CurrentParameter.IsValuable() && this.CurrentParameter.AppendType.IsIn(ExpressionResultAppendType.AppendTempDate))
+            if (this.CurrentParameter.HasValue() && this.CurrentParameter.AppendType.IsIn(ExpressionResultAppendType.AppendTempDate))
             {
                 this.CurrentParameter.CommonTempData = new KeyValuePair<string, object[]>(parameter, orgs);
                 return;

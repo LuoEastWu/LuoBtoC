@@ -15,7 +15,7 @@ namespace DAL
         public List<SqlModel.Product> GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
         {
             List<SqlModel.Product> productList = new List<SqlModel.Product>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 productList = db.Queryable<SqlModel.Product>()
                               .Where(strWhere)
@@ -33,7 +33,7 @@ namespace DAL
         {
             SqlModel.Product model = new SqlModel.Product();
             DataTable dt = new DataTable();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 dt = db.Ado.UseStoredProcedure().GetDataTable("Product_GetModel", new SqlSugar.SugarParameter[]
                 {
@@ -131,9 +131,9 @@ namespace DAL
         public bool Delete(long iD)
         {
             int rowsAffected = 0;
-           
 
-            SqlSugar.StartSqlSugar.GetInstance((db)=> 
+
+            Collections.StartSqlSugar.GetInstance((db)=> 
             {
                 rowsAffected = db.Ado.UseStoredProcedure<int>(() =>
                 {
@@ -154,7 +154,7 @@ namespace DAL
         public List<SqlModel.Product> GetPage(string whereStr, string strOrderBy)
         {
             List<SqlModel.Product> proList = new List<SqlModel.Product>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 proList = db.Queryable<SqlModel.Product>()
                           .Where(whereStr)
@@ -167,7 +167,7 @@ namespace DAL
         public List<SqlModel.Product> GetList(int p1, string p2, string p3)
         {
             List<SqlModel.Product> list = new List<SqlModel.Product>();
-            SqlSugar.StartSqlSugar.GetInstance((db) =>
+            Collections.StartSqlSugar.GetInstance((db) =>
             {
                 if (p1 > 0)
                 {

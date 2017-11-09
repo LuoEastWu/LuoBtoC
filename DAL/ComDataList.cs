@@ -23,12 +23,13 @@ namespace DAL
             try
             {
                 DataTable table = new DataTable();
-                SqlSugar.StartSqlSugar.GetInstance((db) =>
+                top = top == 0 ? int.MaxValue : top;
+                Collections.StartSqlSugar.GetInstance((db) =>
                 {
                     table = db.Queryable<T>()
                             .Where(where)
-                            .OrderBy(fieldorder)
-                            .Take(top==0?int.MaxValue:top)
+                            .Take(top)
+                            .OrderByIF(SqlSugar.SqlFunc.HasValue(fieldorder), fieldorder)
                             .Select(fields)
                             .ToDataTable();
                 });

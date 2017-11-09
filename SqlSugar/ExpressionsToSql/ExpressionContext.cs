@@ -37,6 +37,7 @@ namespace SqlSugar
         }
         public int Index { get; set; }
         public int ParameterIndex { get; set; }
+        public string SingleTableNameSubqueryShortName{ get;  set; }
         public MappingColumnList MappingColumns { get; set; }
         public MappingTableList MappingTables { get; set; }
         public IgnoreColumnList IgnoreComumnList { get; set; }
@@ -98,6 +99,8 @@ namespace SqlSugar
         }
         public virtual string SqlTranslationLeft { get { return "["; } }
         public virtual string SqlTranslationRight { get { return "]"; } }
+        public virtual Action<Type> InitMappingInfo { get; set; }
+        public virtual Action RefreshMapping { get; set; }
         #endregion
 
         #region Core methods 
@@ -127,7 +130,7 @@ namespace SqlSugar
         {
             Check.ArgumentNullException(entityName, string.Format(ErrorMessage.ObjNotExist, "Table Name"));
             if (IsTranslationText(entityName)) return entityName;
-            isMapping = isMapping && this.MappingTables.IsValuable();
+            isMapping = isMapping && this.MappingTables.HasValue();
             var isComplex = entityName.Contains(UtilConstants.Dot);
             if (isMapping && isComplex)
             {
@@ -142,7 +145,7 @@ namespace SqlSugar
             else if (isMapping)
             {
                 var mappingInfo = this.MappingTables.FirstOrDefault(it => it.EntityName.Equals(entityName, StringComparison.CurrentCultureIgnoreCase));
-                return SqlTranslationLeft + (mappingInfo == null ? entityName : mappingInfo.EntityName) + SqlTranslationRight;
+                return SqlTranslationLeft + (mappingInfo == null ? entityName : mappingInfo.DbTableName) + SqlTranslationRight;
             }
             else if (isComplex)
             {
@@ -172,7 +175,7 @@ namespace SqlSugar
         }
         public virtual string GetDbColumnName(string entityName, string propertyName)
         {
-            if (this.MappingColumns.IsValuable())
+            if (this.MappingColumns.HasValue())
             {
                 var mappingInfo = this.MappingColumns.SingleOrDefault(it => it.EntityName == entityName && it.PropertyName == propertyName);
                 return mappingInfo == null ? propertyName : mappingInfo.DbColumnName;

@@ -60,18 +60,19 @@ namespace SqlSugar
         }
         public override IDataAdapter GetAdapter()
         {
-            return new SqlDataAdapter();
+            return new OracleDataAdapter();
         }
         public override IDbCommand GetCommand(string sql, SugarParameter[] parameters)
         {
             OracleCommand sqlCommand = new OracleCommand(sql, (OracleConnection)this.Connection);
+            sqlCommand.BindByName = true;
             sqlCommand.CommandType = this.CommandType;
             sqlCommand.CommandTimeout = this.CommandTimeOut;
             if (this.Transaction != null)
             {
                 sqlCommand.Transaction = (OracleTransaction)this.Transaction;
             }
-            if (parameters.IsValuable())
+            if (parameters.HasValue())
             {
                 IDataParameter[] ipars = ToIDbDataParameter(parameters);
                 sqlCommand.Parameters.AddRange((OracleParameter[])ipars);
@@ -98,24 +99,40 @@ namespace SqlSugar
             {
                 if (parameter.Value == null) parameter.Value = DBNull.Value;
                 var sqlParameter = new OracleParameter();
+                sqlParameter.Size = parameter.Size == -1 ? 0 : parameter.Size;
                 sqlParameter.ParameterName = parameter.ParameterName.ToLower();
                 if (sqlParameter.ParameterName[0] == '@')
                 {
                     sqlParameter.ParameterName = ':' + sqlParameter.ParameterName.Substring(1, sqlParameter.ParameterName.Length - 1);
                 }
-                //sqlParameter.UdtTypeName = parameter.UdtTypeName;
-                sqlParameter.Size = parameter.Size;
-                sqlParameter.Value = parameter.Value;
-                sqlParameter.DbType = parameter.DbType;
+                if (this.CommandType == CommandType.StoredProcedure)
+                {
+                    sqlParameter.ParameterName = sqlParameter.ParameterName.TrimStart(':');
+                }
+                if (sqlParameter.DbType == System.Data.DbType.Guid)
+                {
+                    sqlParameter.DbType = System.Data.DbType.String;
+                    sqlParameter.Value = sqlParameter.Value.ObjToString();
+                }
+                else if (parameter.DbType == System.Data.DbType.Boolean)
+                {
+                    sqlParameter.DbType = System.Data.DbType.Int16;
+                    sqlParameter.Value = (bool)parameter.Value ? 1 : 0;
+                }
+                else
+                {
+                    sqlParameter.Value = parameter.Value;
+                }
                 if (parameter.Direction != 0)
                     sqlParameter.Direction = parameter.Direction;
                 result[index] = sqlParameter;
-                if (sqlParameter.Direction == ParameterDirection.Output)
+                if (sqlParameter.Direction.IsIn(ParameterDirection.Output, ParameterDirection.InputOutput))
                 {
                     if (this.OutputParameters == null) this.OutputParameters = new List<IDataParameter>();
                     this.OutputParameters.RemoveAll(it => it.ParameterName == sqlParameter.ParameterName);
                     this.OutputParameters.Add(sqlParameter);
                 }
+
                 ++index;
             }
             return result;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 namespace SqlSugar
@@ -9,6 +10,7 @@ namespace SqlSugar
         public const string Dot = ".";
         public const char DotChar = '.';
         internal const string Space = " ";
+        internal const char SpaceChar =' ';
         internal const string AssemblyName = "SqlSugar";
         internal const string ReplaceKey = "{662E689B-17A1-4D06-9D27-F29EAB8BC3D6}";
 
@@ -26,6 +28,7 @@ namespace SqlSugar
         internal static Type DateType = typeof(DateTime);
         internal static Type ByteArrayType = typeof(byte[]);
         internal static Type ModelType= typeof(ModelContext);
+        internal static Type DynamicType = typeof(ExpandoObject);
         internal static Type Dicii = typeof(KeyValuePair<int, int>);
         internal static Type DicIS = typeof(KeyValuePair<int, string>);
         internal static Type DicSi = typeof(KeyValuePair<string, int>);
