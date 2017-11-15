@@ -1,17 +1,152 @@
 ﻿@{
     Layout = null;
 }
-
+@model LuoBtoC.Areas.Admin.Models.ProductAddModel
 <!DOCTYPE html>
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Product_Add</title>
+    <title>商品添加</title>
+    <link rel="stylesheet" type="text/css" href="../css/list.css" />
+    <link href="../style/style.css" rel="stylesheet" type="text/css" />
+    <script src="../js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+    <script src="../js/jquery.js" type="text/javascript"></script>
+    <script src="../js/jquery-1.5.2.min.js" type="text/javascript"></script>
+    <script src="../js/common.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function setinitvalue(obj) {
+            if ($(obj).val() == "") { $(obj).val("1"); }
+        }
+
+        function check() {
+            //            alert($("#rbtPic").Selected.ToString());
+            if ($("#rbtLanguage").attr("checked") == !true) {
+                document.getElementById("pic").style.display = "none";
+            }
+        }
+    </script>
+    <style type="text/css">
+        .hideclass {
+            display: none;
+        }
+    </style>
+    <script type="text/javascript" language="javascript">
+        $(function () {
+            $("#rbtPic").change(function () {
+                $("#tr1").removeClass("hideclass");
+                $("#tr2").addClass("hideclass");
+            })
+
+            $("#rbtLanguage").change(function () {
+                $("#tr1").addClass("hideclass");
+                $("#tr2").removeClass("hideclass");
+            })
+
+        });
+    </script>
 </head>
-<body>
-    <div>
-        
-    </div>
+<body onload="controlInputNumber();" class="_body" style="margin-bottom:0px;margin-left:0px;margin-right:0px;margin-top:0px">
+    <form id="form1" runat="server">
+        <div class="list1">
+            <div class="list2">
+                <span>商品添加</span>
+            </div>
+            <div style="border:1px solid #FFFFFF">
+                <table class="list3" width="100%" height="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td class="list3_1" style="width:215px" nowrap="nowrap">
+                            <span style=" color:Black">商品名称：</span>
+                        </td>
+                        <td class="list3_2" nowrap="nowrap">
+                            @Html.TextBoxFor(m => m.txtProductName)
+                            <font color="red">*</font>
+                            @Html.ValidationMessageFor(m => m.txtProductName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="list3_1" nowrap="nowrap">
+                            <span style=" color:Black">商品类型：</span>
+                        </td>
+                        <td class="list3_2" nowrap="nowrap">
+                            <select name="ddlProductType" id="ddlProductType" style="margin-left:10px"></select>
+                            <font color="red">*</font>
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" InitialValue="0" runat="server" ControlToValidate="ddlProductType" ErrorMessage="请选择商品类型！" ToolTip="请选择商品类型！" Display="Dynamic"></asp:RequiredFieldValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="list3_1" style="width:215px" nowrap="nowrap">
+                            <span style=" color:Black">商品图片：</span>
+                        </td>
+                        <td class="list3_2" nowrap="nowrap">
+                            <asp:FileUpload ID="file1" runat="server" onchange="checkImage(value)" Style="cursor: pointer;" />
+                            <asp:ImageButton ID="ImageButton1" runat="server" OnClick="btnUpPic_Click" CausesValidation="false" ImageUrl="../images/blue/shangc.jpg" style="margin-left:10px;width:59px;height:24px" />
+                            <asp:HiddenField ID="hid" runat="server" Value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="list3_1" nowrap="nowrap">
+                            <span style=" color:Black">描述：</span>
+                        </td>
+                        <td class="list3_2" nowrap="nowrap" style="padding-left: 10px; height: 420px;">
+                            <FCKeditorV2:FCKeditor ID="txtDescription" runat="server" BasePath="../js/fckeditor/" Height="400px">
+                            </FCKeditorV2:FCKeditor>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="list3_1" nowrap="nowrap">
+                            <span style=" color:Black">品牌：</span>
+                        </td>
+                        <td class="list3_2" nowrap="nowrap">
+                            <asp:DropDownList ID="ddlBrand" runat="server" AppendDataBoundItems="true" style="margin-left:10px">
+                                <asp:ListItem Text="请选择品牌！" Value="0"></asp:ListItem>
+                            </asp:DropDownList><font color="red">*</font>
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" InitialValue="0" ControlToValidate="ddlBrand" ErrorMessage="请选择品牌！" ToolTip="请选择品牌！" Display="Dynamic"></asp:RequiredFieldValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="list3_1" nowrap="nowrap">
+                            <span style=" color:Black">排序：</span>
+                        </td>
+                        <td class="list3_2" nowrap="nowrap">
+                            <asp:TextBox ID="txtSort" runat="server" Text="0"></asp:TextBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="list3_1" style="width:215px" nowrap="nowrap">
+                            <span style=" color:Black">规格：</span>
+                        </td>
+                        <td class="list3_2" nowrap="nowrap">
+                            <asp:TextBox ID="txtSpec" runat="server" Text=""></asp:TextBox><font color="red">*</font>
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="txtProductName" ErrorMessage="请输入规格！" ToolTip="请输入规格！" Display="Dynamic"></asp:RequiredFieldValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="list3_1" style="width:215px" nowrap="nowrap">
+                            <span style=" color:Black">市场价格：</span>
+                        </td>
+                        <td class="list3_2" nowrap="nowrap">
+                            <asp:TextBox ID="txtMarketPrice" runat="server" Text=""></asp:TextBox><font color="red">*</font>
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="txtProductName" ErrorMessage="请输入市场价格！" ToolTip="请输入市场价格！" Display="Dynamic"></asp:RequiredFieldValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="list3_1" style="width:215px" nowrap="nowrap">
+                            <span style=" color:Black">本网站价格：</span>
+                        </td>
+                        <td class="list3_2" nowrap="nowrap">
+                            <asp:TextBox ID="txtWebsitePrice" runat="server" Text=""></asp:TextBox><font color="red">*</font>
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ControlToValidate="txtProductName" ErrorMessage="请输入本网站价格！" ToolTip="请输入本网站价格！" Display="Dynamic"></asp:RequiredFieldValidator>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style=" height:30px;">
+                            <asp:ImageButton ID="tijiao" runat="server" Text="" OnClick="tijiao_Click" Style="cursor: pointer; margin-left:225px;" ImageUrl="../images/blue/submit.jpg" />
+                            <asp:ImageButton ID="btn_Return" runat="server" OnClick="btnReturn_Click" ImageUrl="../images/blue/cancel.jpg" Style="cursor: pointer; margin-left:10px" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </form>
 </body>
 </html>

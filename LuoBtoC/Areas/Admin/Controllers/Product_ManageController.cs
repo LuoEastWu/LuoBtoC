@@ -77,7 +77,7 @@ namespace LuoBtoC.Areas.Admin.Controllers
             if (productname != null && productname != "")
             {
                 ViewBag.ProductName = productname;
-                whereStr += " and productname like '%" + Request.QueryString["productname"] + "%'";
+                whereStr += " and productname like '%" + productname + "%'";
             }
             if (producttypeids != null && producttypeids != "")
             {
@@ -299,58 +299,15 @@ namespace LuoBtoC.Areas.Admin.Controllers
             getIds(producttypeids.Split(new char[] { ',' })[0]);
             SqlModel.Home.ProductModel productModel = new SqlModel.Home.ProductModel();
             productModel = BindDate(productname, producttypeids, Ids);
-            if (url.IndexOf('?') > -1)
-            {
-                Response.Redirect(url + "&productname=" + productname + "&producttypeids=" + producttypeids + "&Ids=" + Ids);
-            }
-            else
-            {
-                Response.Redirect(url + "?productname=" + productname + "&producttypeids=" + producttypeids + "&Ids=" + Ids);
-            }
-
-
-            string htmlData = "<tr> <td class=\"forms6_1\" style=\"width: 28px\" align=\"center\"> ";
-
-            htmlData += "<input id = \"chkChooseauditAll\" type=\"checkbox\" onclick=\"ChooseAll(this)\" /> </td>";
-            htmlData += " <td class=\"forms6_1\" align=\"left\"><span style =\"color: Black\" > 商品名称 </ span > </td>";
-            htmlData += "< td class=\"forms6_1\" align=\"left\"><span style = \"color: Black\" > 商品类型 </span></td>";
-            htmlData += " <td class=\"forms6_1\" align=\"left\"> < span style = \"color: Black\" > 描述 </ span ></ td >";
-            htmlData += "< td class=\"forms6_1\" align=\"left\">< span style = \"color: Black\" > 品牌 </ span ></ td >";
-            htmlData += "< td class=\"forms6_1\" align=\"left\">< span style = \"color: Black\" > 规格 </ span ></ td >";
-            htmlData += "< td class=\"forms6_1\" align=\"left\"><span style = \"color: Black\" > 市场价格 </span ></td>";
-            htmlData += "< td class=\"forms6_1\" align=\"left\"><span style = \"color: Black\" > 本网站价格 </span ></td>";
-            htmlData += "< td class=\"forms6_1\" align=\"left\"><span style = \"color: Black\" > 创建时间 </span ></td>";
-            htmlData += "< td class=\"forms6_1\" align=\"left\"><span style = \"color: Black\" > 操作 </span ></td></tr>";
-            if (productModel != null)
-            {
-                foreach (var v in productModel.ProList)
-                {
-                    htmlData += "<tr onmouseover = \"this.style.background = '#F3FBCA'\" onmouseout=\"this.style.background = '#ffffff'; \">";
-
-                    htmlData += "< td class=\"forms6_3\" style=\"width:28px\" align=\"center\">";
-                    htmlData += "<input type =\"checkbox\" name=\"chkChooseaudit\" value=" + @v.ID + " onclick=\"ChooseItemClick(this);\" /></td>";
-                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
-                    htmlData += "< span style = \"color:Black\" >" + Collections.publicHandle.GetSubstring(v.ProductName, 10, "....") + " </ span > </ td >";
-                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
-                    htmlData += "< span style = \"color:Black\" >"; htmlData += "" + LuoBtoC.Areas.Admin.Controllers.Product_ManageController.getProductTypeName(v.ProductTypeId.ToString()) + "</ span ></ td >";
-                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
-                    htmlData += "< span style = \"color:Black\" >" + Collections.publicHandle.GetSubstring(v.Description, 10, "....") + " </ span > </ td >";
-                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
-                    htmlData += "< span style = \"color:Black\" >"; htmlData += "" + LuoBtoC.Areas.Admin.Controllers.Product_ManageController.getBrandName(v.Brand.ToString()) + " </ span ></ td >";
-                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
-                    htmlData += "< span style = \"color:Black\" > " + v.Spec + " </ span ></ td >";
-                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
-                    htmlData += "<span style = \"color:Black\" > " + v.MarketPrice + " </ span ></ td >";
-                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
-                    htmlData += "<span style = \"color:Black\" > " + v.WebsitePrice + " </ span ></ td >";
-                    htmlData += "< td class=\"forms6_3\" align=\"left\">";
-                    htmlData += "<span style = \"color:Black\" >" + DateTime.Parse(v.CreateDate.ToString()).ToString("yyyy-MM-dd HH:mm:ss") + " </ span ></ td >";
-                    htmlData += "< td class=\"forms6_4\" align=\"left\">";
-                    htmlData += "< a href = \"Product_Update.aspx?id=" + v.ID + " > 修改 </ a > &nbsp;&nbsp;&nbsp;&nbsp;";
-                    htmlData += "Html.ActionLink(\"删除\", \"clear\", null, new { ID = \"linkbtnDelete\", style = \"cursor:hand;\", CommandName = \"Del\", CommandArgument = " + v.ID + ", onclick = \"return confirm('您确实要删除吗！')\" })</td></tr>";
-                }
-            }
-            return View(htmlData);
+            //if (url.IndexOf('?') > -1)
+            //{
+            //    Response.Redirect(url + "&productname=" + productname + "&producttypeids=" + producttypeids + "&Ids=" + Ids);
+            //}
+            //else
+            //{
+            //    Response.Redirect(url + "?productname=" + productname + "&producttypeids=" + producttypeids + "&Ids=" + Ids);
+            //}
+            return PartialView(productModel);
         }
 
 
