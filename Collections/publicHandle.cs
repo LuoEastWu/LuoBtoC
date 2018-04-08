@@ -50,7 +50,7 @@ namespace Collections
             return tStr;
         }
 
-       
+
         /// <summary>
         /// 字符过滤
         /// </summary>
@@ -181,7 +181,7 @@ namespace Collections
         /// <param name="page">this.Page</param>
         /// <param name="message">提示信息</param>
         /// <param name="url">url</param>
-        public static string ShowMessage( string message, string url)
+        public static string ShowMessage(string message, string url)
         {
             return "<script language=\"javascript\" >alert('" + message + "');javascript:location='" + url + "';</script>";
 
@@ -191,10 +191,10 @@ namespace Collections
         /// </summary>
         /// <param name="page">this.Page</param>
         /// <param name="message">提示信息</param>
-        public static string ShowMessage( string message)
+        public static string ShowMessage(string message)
         {
 
-           return "<script language=\"javascript\" >alert('" + message + "');</script>";
+            return "<script language=\"javascript\" >alert('" + message + "');</script>";
 
 
         }
