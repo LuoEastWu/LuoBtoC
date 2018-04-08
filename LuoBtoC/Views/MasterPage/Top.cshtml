@@ -3,14 +3,12 @@
 }
 @model SqlModel.MasterPage.TopModels
 
-<link href="css/templatemo_style.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="css/nivo-slider.css" type="text/css" media="screen" />
-<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
 
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/ddsmoothmenu.js">
-
-</script>
+<link href="~/Content/templatemo_style.css" rel="stylesheet" />
+<link href="~/Content/ddsmoothmenu.css" rel="stylesheet" />
+<link href="~/Content/nivo-slider.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/ddsmoothmenu.js"></script>
 
 <script type="text/javascript">
 
@@ -43,11 +41,7 @@
             @foreach (SqlModel.ProductType pro in Model.ProList)
             {
                 <li>
-
                     @Html.ActionLink(pro.TypeName, "Products", "Home", new { ProductTypeId = pro.ID }, "")
-
-
-
                     <ul>
                         @foreach (SqlModel.ProductType proSub in new BLL.Bll_ProductType().GetListByPage(" IsDelete=0 and fid=" + pro.ID, " sort ", 0, 15))
                         {
